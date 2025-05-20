@@ -1,0 +1,40 @@
+# Ignore arquivos de build
+bin/
+obj/
+
+# Ignore arquivos de usuário
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Ignore configurações do Visual Studio
+.vs/
+.idea/
+
+# Ignore arquivos de log e temporários
+*.log
+*.tmp
+*.bak
+
+# Ignore pacotes NuGet
+packages/
+*.nupkg
+project.lock.json
+project.fragment.lock.json
+
+# Arquivos de configuração do Rider/Resharper
+*.DotSettings.user
+
+# Ignore arquivos de build específicos
+*.dll
+*.exe
+*.pdb
+*.cache
+*.db
+*.config
+*.runtimeconfig.json
+*.deps.json
+
+# Ignore arquivos de publish
+publish/
