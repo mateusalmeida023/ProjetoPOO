@@ -1,4 +1,4 @@
-namespace ConsoleApp1;
+namespace ProjetoPOO.Modelos;
 
 public class Transportadora
 {

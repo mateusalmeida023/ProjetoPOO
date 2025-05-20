@@ -1,4 +1,5 @@
-namespace ConsoleApp1;
+namespace ProjetoPOO.Menus;
+using ProjetoPOO.Modelos;
 
 public class Menu
 {

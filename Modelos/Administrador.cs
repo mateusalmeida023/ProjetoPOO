@@ -1,4 +1,5 @@
-namespace ConsoleApp1;
+namespace ProjetoPOO.Modelos;
+using ProjetoPOO.Menus;
 
 public class Administrador
 {
