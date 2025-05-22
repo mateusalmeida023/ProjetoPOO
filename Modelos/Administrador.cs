@@ -19,7 +19,7 @@ public class Administrador
                 Console.Write("Digite a senha: ");
                 string senha = Console.ReadLine();
                 
-                if (usuario == "administrador" && senha == "123456") 
+                if (usuario == "administrador" && senha == "1234") 
                 { 
                     Console.Clear();
                     Console.WriteLine("Você entrou como administrador!");
