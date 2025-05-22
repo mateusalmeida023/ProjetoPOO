@@ -83,7 +83,7 @@ public class Endereco
             Console.WriteLine($"Erro: {ex.Message}");
             Console.WriteLine("\nPressione qualquer tecla para continuar...");
             Console.ReadKey();
-            throw; // Re-throw to be handled by the calling method
+            throw;
         }
     }
 

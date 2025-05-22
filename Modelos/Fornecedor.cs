@@ -40,7 +40,7 @@ public class Fornecedor : Usuario
             }
             else if (opcao == 2)
             {
-                //AlterarFornecedor();
+                AlterarFornecedor();
             }
             else if (opcao == 3)
             {
@@ -189,6 +189,104 @@ public class Fornecedor : Usuario
         }
         Console.WriteLine("\nPressione qualquer tecla para continuar...");
         Console.ReadKey();
+    }
+
+    public static void AlterarFornecedor()
+    {
+        try
+        {
+            Console.Clear();
+            Console.WriteLine("----ALTERAR FORNECEDOR----");
+            
+            if (fornecedoresCount == 0)
+            {
+                Console.WriteLine("Não há nenhum fornecedor cadastrado para alterar.");
+                Console.WriteLine("\nPressione qualquer tecla para continuar...");
+                Console.ReadKey();
+                return;
+            }
+
+            Console.WriteLine("Fornecedores cadastrados:");
+            for (int i = 0; i < fornecedoresCount; i++)
+            {
+                Console.WriteLine($"{i + 1}. {fornecedores[i].Nome} - {fornecedores[i].Email}");
+            }
+
+            Console.Write("\nDigite o número do fornecedor que deseja alterar: ");
+            if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 1 || opcao > fornecedoresCount)
+            {
+                throw new Exception("Opção inválida! Digite um número da lista.");
+            }
+
+            int index = opcao - 1;
+            Fornecedor fornecedor = fornecedores[index];
+
+            Console.Clear();
+            Console.WriteLine($"Alterando dados do fornecedor: {fornecedor.Nome}");
+            Console.WriteLine("\nDeixe em branco para manter o valor atual");
+            
+            Console.Write($"Nome do Fornecedor ({fornecedor.Nome}): ");
+            string nome = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(nome))
+            {
+                fornecedor.Nome = nome;
+            }
+
+            Console.Write($"Email do Fornecedor ({fornecedor.Email}): ");
+            string email = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(email))
+            {
+                if (!email.Contains("@"))
+                {
+                    throw new Exception("Email inválido.");
+                }
+                fornecedor.Email = email;
+            }
+
+            Console.Write($"Telefone do Fornecedor ({fornecedor.Telefone}): ");
+            string telefone = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(telefone))
+            {
+                if (telefone.Length < 10)
+                {
+                    throw new Exception("Telefone inválido. Deve conter pelo menos 10 dígitos.");
+                }
+                fornecedor.Telefone = telefone;
+            }
+
+            Console.Write($"Descrição do Fornecedor ({fornecedor.Descricao}): ");
+            string descricao = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(descricao))
+            {
+                fornecedor.Descricao = descricao;
+            }
+
+            Console.Write("\nDeseja alterar o endereço? (S/N): ");
+            string alterarEndereco = Console.ReadLine()?.ToUpper();
+            
+            if (alterarEndereco == "S")
+            {
+                Console.Clear();
+                fornecedor.Endereco = Endereco.AdicionarEndereco();
+            }
+
+            Console.Clear();
+            Console.WriteLine("Fornecedor alterado com sucesso!");
+            Console.WriteLine($"Nome: {fornecedor.Nome}");
+            Console.WriteLine($"Email: {fornecedor.Email}");
+            Console.WriteLine($"Telefone: {fornecedor.Telefone}");
+            Console.WriteLine($"Descrição: {fornecedor.Descricao}");
+            Console.WriteLine($"Endereço: {fornecedor.Endereco}");
+            Console.WriteLine("\nPressione qualquer tecla para continuar...");
+            Console.ReadKey();
+        }
+        catch (Exception ex)
+        {
+            Console.Clear();
+            Console.WriteLine($"Erro: {ex.Message}");
+            Console.WriteLine("\nPressione qualquer tecla para continuar...");
+            Console.ReadKey();
+        }
     }
 
     public override string ToString()

@@ -42,7 +42,7 @@ public class Produto
                 }
                 else if (opcao == 2)
                 {
-                    //AlterarFornecedor();
+                    AlterarProduto();
                 }
                 else if (opcao == 3)
                 {
@@ -213,5 +213,112 @@ public class Produto
         }
         
     }
-    
+
+    public static void AlterarProduto()
+    {
+        try
+        {
+            Console.Clear();
+            Console.WriteLine("----ALTERAR PRODUTO----");
+            
+            if (produtoCount == 0)
+            {
+                Console.WriteLine("Não há nenhum produto cadastrado para alterar.");
+                Console.WriteLine("\nPressione qualquer tecla para continuar...");
+                Console.ReadKey();
+                return;
+            }
+
+            Console.WriteLine("Produtos cadastrados:");
+            for (int i = 0; i < produtoCount; i++)
+            {
+                Console.WriteLine($"{i + 1}. {produto[i].Nome} - R${produto[i].Valor:F2} - Qtd: {produto[i].Quantidade}");
+            }
+
+            Console.Write("\nDigite o número do produto que deseja alterar: ");
+            if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 1 || opcao > produtoCount)
+            {
+                throw new Exception("Opção inválida! Digite um número da lista.");
+            }
+
+            int index = opcao - 1;
+            Produto produtoAtual = produto[index];
+
+            Console.Clear();
+            Console.WriteLine($"Alterando dados do produto: {produtoAtual.Nome}");
+            Console.WriteLine("\nDeixe em branco para manter o valor atual");
+            
+            Console.Write($"Nome do Produto ({produtoAtual.Nome}): ");
+            string nome = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(nome))
+            {
+                produtoAtual.Nome = nome;
+            }
+
+            Console.Write($"Valor do Produto (R${produtoAtual.Valor:F2}): R$");
+            string valorStr = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(valorStr))
+            {
+                if (!double.TryParse(valorStr, out double valor) || valor <= 0)
+                {
+                    throw new Exception("Valor inválido. Digite um número maior que zero.");
+                }
+                produtoAtual.Valor = valor;
+            }
+
+            Console.Write($"Quantidade do Produto ({produtoAtual.Quantidade}): ");
+            string quantidadeStr = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(quantidadeStr))
+            {
+                if (!int.TryParse(quantidadeStr, out int quantidade) || quantidade < 0)
+                {
+                    throw new Exception("Quantidade inválida. Digite um número maior ou igual a zero.");
+                }
+                produtoAtual.Quantidade = quantidade;
+            }
+
+            Console.Write("\nDeseja alterar o fornecedor? (S/N): ");
+            string alterarFornecedor = Console.ReadLine()?.ToUpper();
+            
+            if (alterarFornecedor == "S")
+            {
+                if (Fornecedor.fornecedoresCount == 0)
+                {
+                    throw new Exception("Não há fornecedores cadastrados para selecionar.");
+                }
+
+                Console.Clear();
+                Console.WriteLine("----SELECIONE O NOVO FORNECEDOR----");
+                for (int i = 0; i < Fornecedor.fornecedoresCount; i++)
+                {
+                    Console.WriteLine($"{i + 1}. {Fornecedor.fornecedores[i].Nome}");
+                }
+
+                Console.Write("Opção: ");
+                if (!int.TryParse(Console.ReadLine(), out int fornecedorOpcao) || 
+                    fornecedorOpcao < 1 || fornecedorOpcao > Fornecedor.fornecedoresCount)
+                {
+                    throw new Exception("Opção inválida! Digite um número da lista.");
+                }
+
+                produtoAtual.Fornecedor = Fornecedor.fornecedores[fornecedorOpcao - 1];
+            }
+
+            Console.Clear();
+            Console.WriteLine("Produto alterado com sucesso!");
+            Console.WriteLine($"Nome: {produtoAtual.Nome}");
+            Console.WriteLine($"Valor: R${produtoAtual.Valor:F2}");
+            Console.WriteLine($"Quantidade: {produtoAtual.Quantidade}");
+            Console.WriteLine($"Fornecedor: {produtoAtual.Fornecedor.Nome}");
+            Console.WriteLine("\nPressione qualquer tecla para continuar...");
+            Console.ReadKey();
+        }
+        catch (Exception ex)
+        {
+            Console.Clear();
+            Console.WriteLine($"Erro: {ex.Message}");
+            Console.WriteLine("\nPressione qualquer tecla para continuar...");
+            Console.ReadKey();
+        }
+    }
 }

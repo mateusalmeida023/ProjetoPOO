@@ -37,7 +37,7 @@ public class Cliente : Usuario
             }
             else if (opcao == 2)
             {
-                //AlterarCliente();
+                AlterarCliente();
             }
             else if (opcao == 3)
             {
@@ -150,6 +150,93 @@ public class Cliente : Usuario
         }
         Console.WriteLine("\nPressione qualquer tecla para continuar...");
         Console.ReadKey();
+    }
+
+    public static void AlterarCliente()
+    {
+        try
+        {
+            Console.Clear();
+            Console.WriteLine("----ALTERAR CLIENTE----");
+            
+            if (clienteCount == 0)
+            {
+                Console.WriteLine("Não há nenhum cliente cadastrado para alterar.");
+                Console.WriteLine("\nPressione qualquer tecla para continuar...");
+                Console.ReadKey();
+                return;
+            }
+
+            Console.WriteLine("Clientes cadastrados:");
+            for (int i = 0; i < clienteCount; i++)
+            {
+                Console.WriteLine($"{i + 1}. {cliente[i].Nome} - {cliente[i].Email}");
+            }
+
+            Console.Write("\nDigite o número do cliente que deseja alterar: ");
+            if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 1 || opcao > clienteCount)
+            {
+                throw new Exception("Opção inválida! Digite um número da lista.");
+            }
+
+            int index = opcao - 1;
+            Cliente clienteAtual = cliente[index];
+
+            Console.Clear();
+            Console.WriteLine($"Alterando dados do cliente: {clienteAtual.Nome}");
+            Console.WriteLine("\nDeixe em branco para manter o valor atual");
+            
+            Console.Write($"Nome do Cliente ({clienteAtual.Nome}): ");
+            string nome = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(nome))
+            {
+                clienteAtual.Nome = nome;
+            }
+
+            Console.Write($"Email do Cliente ({clienteAtual.Email}): ");
+            string email = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(email))
+            {
+                if (!email.Contains("@"))
+                {
+                    throw new Exception("Email inválido.");
+                }
+                clienteAtual.Email = email;
+            }
+
+            Console.Write($"Telefone do Cliente ({clienteAtual.Telefone}): ");
+            string telefone = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(telefone))
+            {
+                if (telefone.Length < 10)
+                {
+                    throw new Exception("Telefone inválido. Deve conter pelo menos 10 dígitos.");
+                }
+                clienteAtual.Telefone = telefone;
+            }
+
+            Console.Write("\nDeseja alterar o endereço? (S/N): ");
+            string alterarEndereco = Console.ReadLine()?.ToUpper();
+            
+            if (alterarEndereco == "S")
+            {
+                Console.Clear();
+                clienteAtual.Endereco = Endereco.AdicionarEndereco();
+            }
+
+            Console.Clear();
+            Console.WriteLine("Cliente alterado com sucesso!");
+            Console.WriteLine(clienteAtual);
+            Console.WriteLine("\nPressione qualquer tecla para continuar...");
+            Console.ReadKey();
+        }
+        catch (Exception ex)
+        {
+            Console.Clear();
+            Console.WriteLine($"Erro: {ex.Message}");
+            Console.WriteLine("\nPressione qualquer tecla para continuar...");
+            Console.ReadKey();
+        }
     }
 
     public override string ToString()
