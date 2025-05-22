@@ -4,6 +4,7 @@ public class Transportadora
 {
     public string Nome { get; set; }
     public double PrecoPorKm { get; set; }
+    public Endereco Endereco { get; set; }
 
     public static Transportadora[] transportadora = new Transportadora[100];
     public static int transportadoraCount = 0;
@@ -71,16 +72,31 @@ public class Transportadora
             Console.WriteLine("----INCLUIR TRANSPORTADORA----");
             Console.Write("Nome da Transportadora: ");
             string nome = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(nome))
+            {
+                throw new Exception("O nome da transportadora não pode estar vazio.");
+            }
+
             Console.Write("Preço por KM cobrado: R$");
-            double preco = double.Parse(Console.ReadLine());
+            if (!double.TryParse(Console.ReadLine(), out double preco) || preco <= 0)
+            {
+                throw new Exception("Preço inválido. Digite um número maior que zero.");
+            }
+            
+            Console.Clear();
+            Endereco endereco = Endereco.AdicionarEndereco();
             
             Transportadora nova = new Transportadora(nome, preco);
+            nova.Endereco = endereco;
             
             transportadora[transportadoraCount++] = nova;
 
-            Console.WriteLine();
-            Console.WriteLine("Transportadora incluida com sucesso!");
-            Console.WriteLine("Pressione qualquer tecla para continuar...");
+            Console.Clear();
+            Console.WriteLine("Transportadora incluída com sucesso!");
+            Console.WriteLine($"Nome: {nome}");
+            Console.WriteLine($"Preço por KM: R${preco:F2}");
+            Console.WriteLine($"Endereço: {endereco}");
+            Console.WriteLine("\nPressione qualquer tecla para continuar...");
             Console.ReadKey();
         }
         catch (Exception ex)
@@ -229,10 +245,20 @@ public class Transportadora
                 transportadoraAtual.PrecoPorKm = preco;
             }
 
+            Console.Write("\nDeseja alterar o endereço? (S/N): ");
+            string alterarEndereco = Console.ReadLine()?.ToUpper();
+            
+            if (alterarEndereco == "S")
+            {
+                Console.Clear();
+                transportadoraAtual.Endereco = Endereco.AdicionarEndereco();
+            }
+
             Console.Clear();
             Console.WriteLine("Transportadora alterada com sucesso!");
             Console.WriteLine($"Nome: {transportadoraAtual.Nome}");
             Console.WriteLine($"Preço por KM: R${transportadoraAtual.PrecoPorKm:F2}");
+            Console.WriteLine($"Endereço: {transportadoraAtual.Endereco}");
             Console.WriteLine("\nPressione qualquer tecla para continuar...");
             Console.ReadKey();
         }
