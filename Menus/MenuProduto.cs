@@ -1,24 +1,35 @@
+using System;
+
 namespace ProjetoPOO.Menus;
-using ProjetoPOO.Modelos;
-public class MenuAdministrador
+
+using ProjetoPOO.Controllers;
+
+public class MenuProduto
 {
-    public static void ExibirMenuAdministrador()
+    private readonly ProdutoController _controller;
+
+    public MenuProduto()
+    {
+        _controller = new ProdutoController();
+    }
+
+    public void ExibirMenu()
     {
         int opcao = -1;
 
         while (opcao != 99)
         {
+            Console.Clear();
+            Console.WriteLine("----PRODUTO----");
+            Console.WriteLine("1 - Incluir produto");
+            Console.WriteLine("2 - Alterar produto");
+            Console.WriteLine("3 - Excluir produto");
+            Console.WriteLine("4 - Consultar produtos");
+            Console.WriteLine("99 - Voltar");
+            Console.Write("Escolha uma opção: ");
+
             try
             {
-                Console.Clear();
-                Console.WriteLine("----Menu Administrador----");
-                Console.WriteLine("1 - Cadastro de Fornecedores");
-                Console.WriteLine("2 - Cadastro de Produtos");
-                Console.WriteLine("3 - Cadastro de Transportadora");
-                Console.WriteLine("4 - Cadastro de Cliente");
-                Console.WriteLine("99 - Sair");
-                Console.Write("Selecione uma opção: ");
-                
                 if (!int.TryParse(Console.ReadLine(), out opcao))
                 {
                     throw new Exception("Opção inválida! Digite apenas números.");
@@ -27,24 +38,22 @@ public class MenuAdministrador
                 switch (opcao)
                 {
                     case 1:
-                        new MenuFornecedor().ExibirMenu();
+                        _controller.IncluirProduto();
                         break;
                     case 2:
-                        new MenuProduto().ExibirMenu();
+                        _controller.AlterarProduto();
                         break;
                     case 3:
-                        new MenuTransportadora().ExibirMenu();
+                        _controller.ExcluirProduto();
                         break;
                     case 4:
-                        new MenuCliente().ExibirMenu();
+                        _controller.ConsultarProdutos();
                         break;
                     case 99:
-                        Console.Clear();
-                        Console.WriteLine("Você saiu do sistema.");
-                        break;
+                        return;
                     default:
                         Console.Clear();
-                        Console.WriteLine("Opção inválida! Escolha uma opção do menu.");
+                        Console.WriteLine("Opção inválida!");
                         Console.WriteLine("\nPressione qualquer tecla para continuar...");
                         Console.ReadKey();
                         break;
@@ -59,4 +68,4 @@ public class MenuAdministrador
             }
         }
     }
-}
+} 
