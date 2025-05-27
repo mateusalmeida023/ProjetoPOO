@@ -1,9 +1,13 @@
-﻿namespace ProjetoPOO;
-using ProjetoPOO.Modelos;
+﻿using System;
+using ProjetoPOO.Menus;
+
+namespace ProjetoPOO;
+
 internal class Program
 {
     public static void Main(string[] args)
     {
-        Administrador.Login();
+        var menuAdmin = new MenuAdministrador();
+        menuAdmin.RealizarLogin();
     }
 }

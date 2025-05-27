@@ -5,12 +5,11 @@ namespace ProjetoPOO.Modelos;
 public class Fornecedor : Usuario
 {
     public required string Descricao { get; set; }
-    public Endereco? Endereco { get; set; }
+    public Endereco Endereco { get; set; }
     public new int Id { get; set; }
 
     public Fornecedor()
     {
-        // Construtor vazio necessário para object initializer
     }
 
     public Fornecedor(string nome, string email, string telefone, string descricao, int id)

@@ -5,26 +5,44 @@ using ProjetoPOO.Modelos;
 
 public class ProdutoController
 {
+    private Fornecedor SelecionarFornecedor()
+    {
+        if (Data.FornecedoresCount == 0)
+        {
+            throw new Exception("Não há fornecedores cadastrados. Cadastre um fornecedor antes de incluir produtos.");
+        }
+
+        Console.WriteLine("\nFornecedores disponíveis:");
+        for (int i = 0; i < Data.FornecedoresCount; i++)
+        {
+            Console.WriteLine($"{i + 1}. {Data.Fornecedores[i].Nome} - {Data.Fornecedores[i].Descricao}");
+        }
+
+        Console.Write("\nSelecione o número do fornecedor: ");
+        if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 1 || opcao > Data.FornecedoresCount)
+        {
+            throw new Exception("Opção inválida! Digite um número da lista.");
+        }
+
+        return Data.Fornecedores[opcao - 1];
+    }
+
     public void IncluirProduto()
     {
         try
         {
             Console.Clear();
             Console.WriteLine("----INCLUIR PRODUTO----");
-            Console.Write("Nome do Produto: ");
+            
+            Fornecedor fornecedor = SelecionarFornecedor();
+
+            Console.Write("\nNome do Produto: ");
             string nome = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(nome))
             {
                 throw new Exception("O nome do produto não pode estar vazio.");
             }
-
-            Console.Write("Descrição do Produto: ");
-            string descricao = Console.ReadLine();
-            if (string.IsNullOrWhiteSpace(descricao))
-            {
-                throw new Exception("A descrição do produto não pode estar vazia.");
-            }
-
+            
             Console.Write("Preço do Produto: R$");
             if (!double.TryParse(Console.ReadLine(), out double preco) || preco <= 0)
             {
@@ -40,18 +58,18 @@ public class ProdutoController
             var novo = new Produto
             {
                 Nome = nome,
-                Descricao = descricao,
                 Preco = preco,
-                Quantidade = quantidade
+                Quantidade = quantidade,
+                Fornecedor = fornecedor
             };
             Data.Produtos[Data.ProdutosCount++] = novo;
 
             Console.Clear();
             Console.WriteLine("Produto incluído com sucesso!");
             Console.WriteLine($"Nome: {nome}");
-            Console.WriteLine($"Descrição: {descricao}");
             Console.WriteLine($"Preço: R${preco:F2}");
             Console.WriteLine($"Quantidade: {quantidade}");
+            Console.WriteLine($"Fornecedor: {fornecedor.Nome}");
             Console.WriteLine("\nPressione qualquer tecla para continuar...");
             Console.ReadKey();
         }
@@ -81,7 +99,8 @@ public class ProdutoController
 
             for (int i = 0; i < Data.ProdutosCount; i++)
             {
-                Console.WriteLine($"{i + 1}.  {Data.Produtos[i].Nome} - R${Data.Produtos[i].Preco:F2} - Qtd: {Data.Produtos[i].Quantidade}");
+                var produto = Data.Produtos[i];
+                Console.WriteLine($"{i + 1}.  {produto.Nome} - R${produto.Preco:F2} - Qtd: {produto.Quantidade} - Fornecedor: {produto.Fornecedor?.Nome}");
             }
             Console.Write("\nDigite o número do produto que deseja remover: ");
             if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 1 || opcao > Data.ProdutosCount)
@@ -134,7 +153,10 @@ public class ProdutoController
 
             for (int i = 0; i < Data.ProdutosCount; i++)
             {
-                Console.WriteLine($"{i + 1}.  {Data.Produtos[i].Nome} - R${Data.Produtos[i].Preco:F2} - Qtd: {Data.Produtos[i].Quantidade}");
+                var produto = Data.Produtos[i];
+                Console.WriteLine($"{i + 1}.  {produto.Nome} - R${produto.Preco:F2} - Qtd: {produto.Quantidade}");
+                Console.WriteLine($"    Fornecedor: {produto.Fornecedor?.Nome}");
+                Console.WriteLine();
             }
             
             Console.WriteLine("\nPressione qualquer tecla para continuar...");
@@ -167,7 +189,8 @@ public class ProdutoController
             Console.WriteLine("Produtos cadastrados:");
             for (int i = 0; i < Data.ProdutosCount; i++)
             {
-                Console.WriteLine($"{i + 1}. {Data.Produtos[i].Nome} - R${Data.Produtos[i].Preco:F2} - Qtd: {Data.Produtos[i].Quantidade}");
+                var produto = Data.Produtos[i];
+                Console.WriteLine($"{i + 1}. {produto.Nome} - R${produto.Preco:F2} - Qtd: {produto.Quantidade} - Fornecedor: {produto.Fornecedor?.Nome}");
             }
 
             Console.Write("\nDigite o número do produto que deseja alterar: ");
@@ -189,14 +212,7 @@ public class ProdutoController
             {
                 produtoAtual.Nome = nome;
             }
-
-            Console.Write($"Descrição do Produto ({produtoAtual.Descricao}): ");
-            string descricao = Console.ReadLine();
-            if (!string.IsNullOrWhiteSpace(descricao))
-            {
-                produtoAtual.Descricao = descricao;
-            }
-
+            
             Console.Write($"Preço do Produto (R${produtoAtual.Preco:F2}): R$");
             string precoStr = Console.ReadLine();
             if (!string.IsNullOrWhiteSpace(precoStr))
@@ -219,12 +235,20 @@ public class ProdutoController
                 produtoAtual.Quantidade = quantidade;
             }
 
+            Console.Write("\nDeseja alterar o fornecedor? (S/N): ");
+            string alterarFornecedor = Console.ReadLine()?.ToUpper();
+            
+            if (alterarFornecedor == "S")
+            {
+                produtoAtual.Fornecedor = SelecionarFornecedor();
+            }
+
             Console.Clear();
             Console.WriteLine("Produto alterado com sucesso!");
             Console.WriteLine($"Nome: {produtoAtual.Nome}");
-            Console.WriteLine($"Descrição: {produtoAtual.Descricao}");
             Console.WriteLine($"Preço: R${produtoAtual.Preco:F2}");
             Console.WriteLine($"Quantidade: {produtoAtual.Quantidade}");
+            Console.WriteLine($"Fornecedor: {produtoAtual.Fornecedor?.Nome}");
             Console.WriteLine("\nPressione qualquer tecla para continuar...");
             Console.ReadKey();
         }

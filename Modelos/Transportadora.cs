@@ -6,11 +6,10 @@ public class Transportadora
 {
     public required string Nome { get; set; }
     public double PrecoPorKm { get; set; }
-    public Endereco? Endereco { get; set; }
+    public Endereco Endereco { get; set; }
 
     public Transportadora()
     {
-        // Construtor vazio necessário para object initializer
     }
 
     public Transportadora(string nome, double preco)
