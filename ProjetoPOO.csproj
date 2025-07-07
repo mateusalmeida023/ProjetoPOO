@@ -34,7 +34,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ProjetoPOO.Controllers\Cliente\" />
     <Folder Include="ProjetoPOO.Repository\Lists\" />
   </ItemGroup>
 

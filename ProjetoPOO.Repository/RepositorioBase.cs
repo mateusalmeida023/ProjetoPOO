@@ -43,7 +43,7 @@ public abstract class RepositorioBase<T> : IRepositorio<T>
         }
     }
     
-    public List<T> BuscarTodos()
+    public virtual List<T> BuscarTodos()
     {
         return new List<T>(_itens);
     }

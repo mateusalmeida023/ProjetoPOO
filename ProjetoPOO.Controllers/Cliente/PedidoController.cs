@@ -1,5 +1,6 @@
 using ProjetoPOO.Modelos;
 using ProjetoPOO.Repository.Lists;
+using System.Globalization;
 
 namespace ProjetoPOO.Controllers;
 
@@ -14,72 +15,59 @@ public class PedidoController
         _pedidoRepo = new PedidoRepositorio();
     }
 
-    public void RealizarPedido(Cliente cliente)
+    public Pedido? RealizarPedido(Cliente cliente, List<(Produto produto, int quantidade)> itensPedido)
     {
-        var produtos = _produtoRepo.BuscarProdutosDisponiveis();
-        if (produtos.Count == 0)
-        {
-            Console.WriteLine("Não há produtos disponíveis para pedido.");
-            Console.WriteLine("Pressione qualquer tecla para voltar...");
-            Console.ReadKey();
-            return;
-        }
-        Console.WriteLine("Produtos disponíveis:");
-        for (int i = 0; i < produtos.Count; i++)
-        {
-            var p = produtos[i];
-            Console.WriteLine($"{i + 1} - {p.Nome} | Preço: R${p.Preco:F2} | Estoque: {p.Quantidade}");
-        }
+        if (itensPedido == null || itensPedido.Count == 0)
+            return null;
         var itens = new List<PedidoItem>();
-        while (true)
+        foreach (var (produto, qtd) in itensPedido)
         {
-            Console.Write("Digite o número do produto para adicionar ao pedido (ou 0 para finalizar): ");
-            if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 0 || opcao > produtos.Count)
-            {
-                Console.WriteLine("Opção inválida!");
+            if (qtd <= 0 || qtd > produto.Quantidade)
                 continue;
-            }
-            if (opcao == 0) break;
-            var produto = produtos[opcao - 1];
-            Console.Write($"Quantidade de '{produto.Nome}': ");
-            if (!int.TryParse(Console.ReadLine(), out int qtd) || qtd <= 0 || qtd > produto.Quantidade)
-            {
-                Console.WriteLine("Quantidade inválida!");
-                continue;
-            }
             itens.Add(new PedidoItem(qtd, produto.Preco * qtd));
             produto.Quantidade -= qtd;
         }
         if (itens.Count == 0)
-        {
-            Console.WriteLine("Nenhum item adicionado ao pedido.");
-            Console.WriteLine("Pressione qualquer tecla para voltar...");
-            Console.ReadKey();
-            return;
-        }
-        double total = itens.Sum(i => i.PrecoTotal);
-        Console.WriteLine($"Valor total do pedido: R${total:F2}");
-        Console.Write("Confirmar pedido? (s/n): ");
-        var confirm = Console.ReadLine();
-        if (confirm?.ToLower() != "s")
-        {
-            Console.WriteLine("Pedido cancelado.");
-            Console.ReadKey();
-            return;
-        }
+            return null;
         var pedido = new Pedido
         {
             Numero = new Random().Next(1000, 9999),
             DataHoraPedido = DateTime.Now,
-            Situacao = null, 
-            PrecoFrete = 0, 
+            Situacao = Situacao.NOVO,
+            PrecoFrete = 0,
             Itens = itens,
             Cliente = cliente
         };
         cliente.Pedidos.Add(pedido);
         _pedidoRepo.Incluir(pedido);
-        Console.WriteLine("Pedido realizado com sucesso!");
-        Console.WriteLine("Pressione qualquer tecla para voltar...");
-        Console.ReadKey();
+        return pedido;
+    }
+
+    public Pedido? ConsultarPorNumero(Cliente cliente, int numero)
+    {
+        return cliente.Pedidos.FirstOrDefault(p => p.Numero == numero);
+    }
+
+    public List<Pedido> ConsultarPorData(Cliente cliente, DateTime dataIni, DateTime dataFim)
+    {
+        return cliente.Pedidos.Where(p => p.DataHoraPedido.Date >= dataIni.Date && p.DataHoraPedido.Date <= dataFim.Date).ToList();
+    }
+
+    public string GerarDetalhesPedido(Pedido pedido)
+    {
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine($"Pedido Nº: {pedido.Numero}");
+        sb.AppendLine($"Data: {pedido.DataHoraPedido:dd/MM/yyyy HH:mm}");
+        sb.AppendLine($"Situação: {pedido.Situacao}");
+        sb.AppendLine("Itens:");
+        foreach (var item in pedido.Itens)
+        {
+            sb.AppendLine($"- Quantidade: {item.Quantidade} | Preço unitário: R${(item.PrecoTotal/item.Quantidade):F2} | Preço total: R${item.PrecoTotal:F2}");
+        }
+        double totalItens = pedido.Itens.Sum(i => i.PrecoTotal);
+        sb.AppendLine($"Total dos itens: R${totalItens:F2}");
+        sb.AppendLine($"Frete: R${pedido.PrecoFrete:F2}");
+        sb.AppendLine($"Total do pedido: R${(totalItens + pedido.PrecoFrete):F2}");
+        return sb.ToString();
     }
 } 

@@ -1,5 +1,6 @@
 using ProjetoPOO.Modelos;
 using ProjetoPOO.Repository;
+using ProjetoPOO.Repository.Lists;
 
 namespace ProjetoPOO.Repository.Lists;
 
@@ -31,5 +32,17 @@ public class ClienteRepositorio : RepositorioBase<Cliente>
                 partes[10]  // Cep
             )
         };
+    }
+
+    public override List<Cliente> BuscarTodos()
+    {
+        var clientes = base.BuscarTodos();
+        var pedidoRepo = new PedidoRepositorio();
+        var pedidos = pedidoRepo.BuscarTodos();
+        foreach (var cliente in clientes)
+        {
+            cliente.Pedidos = pedidos.Where(p => p.Cliente != null && p.Cliente.Email == cliente.Email).ToList();
+        }
+        return clientes;
     }
 } 

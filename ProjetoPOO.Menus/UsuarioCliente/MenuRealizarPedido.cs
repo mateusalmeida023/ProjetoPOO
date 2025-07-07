@@ -5,13 +5,10 @@ namespace ProjetoPOO.Menus.UsuarioCliente;
 
 public class MenuRealizarPedido
 {
-    private readonly PedidoController _pedidoController;
-    public MenuRealizarPedido()
-    {
-        _pedidoController = new PedidoController();
-    }
     public void Exibir(Cliente cliente)
     {
-        _pedidoController.RealizarPedido(cliente);
+        Console.WriteLine("Por favor, utilize o menu principal do cliente para realizar pedidos.");
+        Console.WriteLine("Pressione qualquer tecla para voltar...");
+        Console.ReadKey();
     }
 }
