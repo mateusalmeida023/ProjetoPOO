@@ -1,3 +1,4 @@
+using ProjetoPOO.Controllers.Exceptions;
 using ProjetoPOO.Modelos;
 
 namespace ProjetoPOO.Controllers;
@@ -12,42 +13,42 @@ public class EnderecoController
             string rua = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(rua))
             {
-                throw new Exception("A rua não pode estar vazia.");
+                throw new NullException("A rua não pode estar vazia.");
             }
 
             Console.Write("Número: ");
             string numero = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(numero))
             {
-                throw new Exception("O número não pode estar vazio.");
+                throw new NullException("O número não pode estar vazio.");
             }
 
             Console.Write("Bairro: ");
             string bairro = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(bairro))
             {
-                throw new Exception("O bairro não pode estar vazio.");
+                throw new NullException("O bairro não pode estar vazio.");
             }
 
             Console.Write("CEP: ");
             string cep = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(cep) || cep.Length != 8)
             {
-                throw new Exception("CEP inválido. Deve conter 8 dígitos.");
+                throw new CepInvalidoException();
             }
 
             Console.Write("Cidade: ");
             string cidade = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(cidade))
             {
-                throw new Exception("A cidade não pode estar vazia.");
+                throw new NullException("A cidade não pode estar vazia.");
             }
 
             Console.Write("Estado: ");
             string estado = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(estado) || estado.Length != 2)
             {
-                throw new Exception("Estado inválido. Use a sigla do estado (ex: RS).");
+                throw new EstadoInvalidoException();
             }
             
             return new Endereco(rua, numero, bairro, cidade, estado, cep);

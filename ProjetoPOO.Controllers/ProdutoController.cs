@@ -1,3 +1,4 @@
+using ProjetoPOO.Controllers.Exceptions;
 using ProjetoPOO.Modelos;
 using ProjetoPOO.Repository.Lists;
 
@@ -5,7 +6,7 @@ namespace ProjetoPOO.Controllers;
 
 public class ProdutoController
 {
-    private readonly ProdutoRepositorio _repo;
+    private ProdutoRepositorio _repo;
     public ProdutoController()
     {
         _repo = new ProdutoRepositorio();
@@ -55,19 +56,19 @@ public class ProdutoController
             string nome = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(nome))
             {
-                throw new Exception("O nome do produto não pode estar vazio.");
+                throw new NullException("O nome do produto não pode estar vazio.");
             }
             
             Console.Write("Preço do Produto: R$");
             if (!double.TryParse(Console.ReadLine(), out double preco) || preco <= 0)
             {
-                throw new Exception("Preço inválido. Digite um número maior que zero.");
+                throw new ValorException("Preço inválido. Digite um número maior que zero.");
             }
 
             Console.Write("Quantidade do Produto: ");
             if (!int.TryParse(Console.ReadLine(), out int quantidade) || quantidade < 0)
             {
-                throw new Exception("Quantidade inválida. Digite um número maior ou igual a zero.");
+                throw new ValorException("Quantidade inválida. Digite um número maior ou igual a zero.");
             }
 
             var novo = new Produto
@@ -230,7 +231,7 @@ public class ProdutoController
             {
                 if (!double.TryParse(precoStr, out double preco) || preco <= 0)
                 {
-                    throw new Exception("Preço inválido. Digite um número maior que zero.");
+                    throw new ValorException("Preço inválido. Digite um número maior que zero.");
                 }
                 produtoAtual.Preco = preco;
             }
@@ -241,7 +242,7 @@ public class ProdutoController
             {
                 if (!int.TryParse(quantidadeStr, out int quantidade) || quantidade < 0)
                 {
-                    throw new Exception("Quantidade inválida. Digite um número maior ou igual a zero.");
+                    throw new ValorException("Quantidade inválida. Digite um número maior ou igual a zero.");
                 }
                 produtoAtual.Quantidade = quantidade;
             }
@@ -251,7 +252,7 @@ public class ProdutoController
             
             if (alterarFornecedor == "S")
             {
-                // produtoAtual.Fornecedor = SelecionarFornecedor();
+                produtoAtual.Fornecedor = SelecionarFornecedor();
             }
 
             _repo.Alterar(index, produtoAtual);

@@ -1,3 +1,4 @@
+using ProjetoPOO.Controllers.Exceptions;
 using ProjetoPOO.Modelos;
 using ProjetoPOO.Repository.Lists;
 
@@ -5,8 +6,8 @@ namespace ProjetoPOO.Controllers;
 
 public class TransportadoraController
 {
-    private readonly EnderecoController _enderecoController;
-    private readonly TransportadoraRepositorio _repo;
+    private EnderecoController _enderecoController;
+    private TransportadoraRepositorio _repo;
 
     public TransportadoraController()
     {
@@ -24,13 +25,13 @@ public class TransportadoraController
             string nome = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(nome))
             {
-                throw new Exception("O nome da transportadora não pode estar vazio.");
+                throw new NullException("O nome da transportadora não pode estar vazio.");
             }
 
             Console.Write("Preço por KM cobrado: R$");
             if (!double.TryParse(Console.ReadLine(), out double preco) || preco <= 0)
             {
-                throw new Exception("Preço inválido. Digite um número maior que zero.");
+                throw new ValorException("Preço inválido. Digite um número maior que zero.");
             }
             
             Console.Clear();
@@ -189,7 +190,7 @@ public class TransportadoraController
             {
                 if (!double.TryParse(precoStr, out double preco) || preco <= 0)
                 {
-                    throw new Exception("Preço inválido. Digite um número maior que zero.");
+                    throw new ValorException("Preço inválido. Digite um número maior que zero.");
                 }
                 transportadoraAtual.PrecoPorKm = preco;
             }

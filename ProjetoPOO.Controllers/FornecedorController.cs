@@ -1,3 +1,4 @@
+using ProjetoPOO.Controllers.Exceptions;
 using ProjetoPOO.Modelos;
 using ProjetoPOO.Repository.Lists;
 
@@ -5,8 +6,8 @@ namespace ProjetoPOO.Controllers;
 
 public class FornecedorController
 {
-    private readonly EnderecoController _enderecoController;
-    private readonly FornecedorRepositorio _repo;
+    private EnderecoController _enderecoController;
+    private FornecedorRepositorio _repo;
 
     public FornecedorController()
     {
@@ -25,28 +26,28 @@ public class FornecedorController
             string nome = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(nome))
             {
-                throw new Exception("O nome do fornecedor não pode estar vazio.");
+                throw new NullException("O nome do fornecedor não pode estar vazio.");
             }
 
             Console.Write("Email do Fornecedor: ");
             string email = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(email) || !email.Contains("@"))
             {
-                throw new Exception("Email inválido.");
+                throw new EmailInvalidoException();
             }
 
             Console.Write("Telefone do Fornecedor: ");
             string telefone = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(telefone) || telefone.Length < 10)
             {
-                throw new Exception("Telefone inválido. Deve conter pelo menos 10 dígitos.");
+                throw new TelefoneInvalidoException();
             }
 
             Console.Write("Descrição do Fornecedor: ");
             string descricao = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(descricao))
             {
-                throw new Exception("A descrição não pode estar vazia.");
+                throw new NullException("A descrição não pode estar vazia.");
             }
             
             Console.Clear();
@@ -176,7 +177,7 @@ public class FornecedorController
             Console.Write("\nDigite o número do fornecedor que deseja alterar: ");
             if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 1 || opcao > fornecedores.Count)
             {
-                throw new Exception("Opção inválida! Digite um número da lista.");
+                throw new NullException("Opção inválida! Digite um número da lista.");
             }
 
             int index = opcao - 1;
@@ -199,7 +200,7 @@ public class FornecedorController
             {
                 if (!email.Contains("@"))
                 {
-                    throw new Exception("Email inválido.");
+                    throw new EmailInvalidoException();
                 }
                 fornecedor.Email = email;
             }
@@ -210,7 +211,7 @@ public class FornecedorController
             {
                 if (telefone.Length < 10)
                 {
-                    throw new Exception("Telefone inválido. Deve conter pelo menos 10 dígitos.");
+                    throw new TelefoneInvalidoException();
                 }
                 fornecedor.Telefone = telefone;
             }

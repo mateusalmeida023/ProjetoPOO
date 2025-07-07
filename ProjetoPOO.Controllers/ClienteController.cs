@@ -1,3 +1,4 @@
+using ProjetoPOO.Controllers.Exceptions;
 using ProjetoPOO.Modelos;
 using ProjetoPOO.Repository.Lists;
 
@@ -5,8 +6,8 @@ namespace ProjetoPOO.Controllers;
 
 public class ClienteController
 {
-    private readonly EnderecoController _enderecoController;
-    private readonly ClienteRepositorio _repo;
+    private EnderecoController _enderecoController;
+    private ClienteRepositorio _repo;
 
     public ClienteController()
     {
@@ -24,28 +25,28 @@ public class ClienteController
             string nome = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(nome))
             {
-                throw new Exception("O nome do cliente não pode estar vazio.");
+                throw new NullException("O nome do cliente não pode estar vazio.");
             }
 
             Console.Write("Email do Cliente: ");
             string email = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(email) || !email.Contains("@"))
             {
-                throw new Exception("Email inválido.");
+                throw new EmailInvalidoException();
             }
 
             Console.Write("Telefone do Cliente: ");
             string telefone = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(telefone) || telefone.Length < 10)
             {
-                throw new Exception("Telefone inválido. Deve conter pelo menos 10 dígitos.");
+                throw new TelefoneInvalidoException();
             }
 
             Console.Write("CPF do Cliente: ");
             string cpf = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(cpf) || cpf.Length != 11)
             {
-                throw new Exception("CPF inválido. Deve conter 11 dígitos.");
+                throw new CpfInvalidoException();
             }
             
             Console.Clear();
@@ -208,7 +209,7 @@ public class ClienteController
             {
                 if (!email.Contains("@"))
                 {
-                    throw new Exception("Email inválido.");
+                    throw new EmailInvalidoException();
                 }
                 clienteAtual.Email = email;
             }
@@ -219,7 +220,7 @@ public class ClienteController
             {
                 if (telefone.Length < 10)
                 {
-                    throw new Exception("Telefone inválido. Deve conter pelo menos 10 dígitos.");
+                    throw new TelefoneInvalidoException();
                 }
                 clienteAtual.Telefone = telefone;
             }
@@ -230,7 +231,7 @@ public class ClienteController
             {
                 if (cpf.Length != 11)
                 {
-                    throw new Exception("CPF inválido. Deve conter 11 dígitos.");
+                    throw new CpfInvalidoException();
                 }
                 clienteAtual.CPF = cpf;
             }
