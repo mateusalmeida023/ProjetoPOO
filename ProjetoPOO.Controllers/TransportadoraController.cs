@@ -1,14 +1,17 @@
-using ConsoleApp1.ProjetoPOO.Modelos;
+using ProjetoPOO.Modelos;
+using ProjetoPOO.Repository.Lists;
 
-namespace ConsoleApp1.ProjetoPOO.Controllers;
+namespace ProjetoPOO.Controllers;
 
 public class TransportadoraController
 {
     private readonly EnderecoController _enderecoController;
+    private readonly TransportadoraRepositorio _repo;
 
     public TransportadoraController()
     {
         _enderecoController = new EnderecoController();
+        _repo = new TransportadoraRepositorio();
     }
 
     public void IncluirTransportadora()
@@ -39,7 +42,7 @@ public class TransportadoraController
                 PrecoPorKm = preco,
                 Endereco = endereco
             };
-            Data.Data.Transportadoras[Data.Data.TransportadorasCount++] = nova;
+            _repo.Incluir(nova);
 
             Console.Clear();
             Console.WriteLine("Transportadora incluída com sucesso!");
@@ -65,7 +68,8 @@ public class TransportadoraController
             Console.Clear();
             Console.WriteLine("----EXCLUIR TRANSPORTADORA----");
 
-            if (Data.Data.TransportadorasCount == 0)
+            var transportadoras = _repo.BuscarTodos();
+            if (transportadoras.Count == 0)
             {
                 Console.WriteLine("Não há nenhuma transportadora para remover.");
                 Console.WriteLine("\nPressione qualquer tecla para continuar...");
@@ -73,12 +77,12 @@ public class TransportadoraController
                 return;
             }
 
-            for (int i = 0; i < Data.Data.TransportadorasCount; i++)
+            for (int i = 0; i < transportadoras.Count; i++)
             {
-                Console.WriteLine($"{i + 1}.  {Data.Data.Transportadoras[i].Nome}");
+                Console.WriteLine($"{i + 1}.  {transportadoras[i].Nome}");
             }
             Console.Write("\nDigite o número da transportadora que deseja remover: ");
-            if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 1 || opcao > Data.Data.TransportadorasCount)
+            if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 1 || opcao > transportadoras.Count)
             {
                 Console.Clear();
                 Console.WriteLine("Opção inválida! Digite um número da lista.");
@@ -88,14 +92,7 @@ public class TransportadoraController
             }
             
             int index = opcao - 1;
-            
-            for (int i = index; i < Data.Data.TransportadorasCount - 1; i++)
-            {
-                Data.Data.Transportadoras[i] = Data.Data.Transportadoras[i + 1];
-            }
-
-            Data.Data.TransportadorasCount--;
-            Data.Data.Transportadoras[Data.Data.TransportadorasCount] = null;
+            _repo.Excluir(index);
 
             Console.Clear();
             Console.WriteLine("Transportadora removida com sucesso!");
@@ -118,7 +115,8 @@ public class TransportadoraController
             Console.Clear();
             Console.WriteLine("----CONSULTAR TRANSPORTADORAS----");
 
-            if (Data.Data.TransportadorasCount == 0)
+            var transportadoras = _repo.BuscarTodos();
+            if (transportadoras.Count == 0)
             {
                 Console.WriteLine("Não há nenhuma transportadora cadastrada.");
                 Console.WriteLine("\nPressione qualquer tecla para continuar...");
@@ -126,9 +124,9 @@ public class TransportadoraController
                 return;
             }
 
-            for (int i = 0; i < Data.Data.TransportadorasCount; i++)
+            for (int i = 0; i < transportadoras.Count; i++)
             {
-                Console.WriteLine($"{i + 1}.  {Data.Data.Transportadoras[i].Nome}");
+                Console.WriteLine($"{i + 1}.  {transportadoras[i].Nome}");
             }
             
             Console.WriteLine("\nPressione qualquer tecla para continuar...");
@@ -150,7 +148,8 @@ public class TransportadoraController
             Console.Clear();
             Console.WriteLine("----ALTERAR TRANSPORTADORA----");
             
-            if (Data.Data.TransportadorasCount == 0)
+            var transportadoras = _repo.BuscarTodos();
+            if (transportadoras.Count == 0)
             {
                 Console.WriteLine("Não há nenhuma transportadora cadastrada para alterar.");
                 Console.WriteLine("\nPressione qualquer tecla para continuar...");
@@ -159,19 +158,19 @@ public class TransportadoraController
             }
 
             Console.WriteLine("Transportadoras cadastradas:");
-            for (int i = 0; i < Data.Data.TransportadorasCount; i++)
+            for (int i = 0; i < transportadoras.Count; i++)
             {
-                Console.WriteLine($"{i + 1}. {Data.Data.Transportadoras[i].Nome} - R${Data.Data.Transportadoras[i].PrecoPorKm:F2} por Km");
+                Console.WriteLine($"{i + 1}. {transportadoras[i].Nome} - R${transportadoras[i].PrecoPorKm:F2} por Km");
             }
 
             Console.Write("\nDigite o número da transportadora que deseja alterar: ");
-            if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 1 || opcao > Data.Data.TransportadorasCount)
+            if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 1 || opcao > transportadoras.Count)
             {
                 throw new Exception("Opção inválida! Digite um número da lista.");
             }
 
             int index = opcao - 1;
-            Transportadora transportadoraAtual = Data.Data.Transportadoras[index];
+            Transportadora transportadoraAtual = transportadoras[index];
 
             Console.Clear();
             Console.WriteLine($"Alterando dados da transportadora: {transportadoraAtual.Nome}");
@@ -203,6 +202,8 @@ public class TransportadoraController
                 Console.Clear();
                 transportadoraAtual.Endereco = _enderecoController.CriarEndereco();
             }
+
+            _repo.Alterar(index, transportadoraAtual);
 
             Console.Clear();
             Console.WriteLine("Transportadora alterada com sucesso!");

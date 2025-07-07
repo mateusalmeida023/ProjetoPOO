@@ -1,4 +1,4 @@
-namespace ConsoleApp1.ProjetoPOO.Modelos;
+namespace ProjetoPOO.Modelos;
 
 public class Produto
 {
@@ -6,7 +6,7 @@ public class Produto
 
     public double Preco { get; set; }
     public int Quantidade { get; set; }
-    public required Fornecedor Fornecedor { get; set; }
+    public Fornecedor Fornecedor { get; set; }
 
     public Produto()
     {

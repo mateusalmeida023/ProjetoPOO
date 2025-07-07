@@ -1,4 +1,4 @@
-namespace ConsoleApp1.ProjetoPOO.Controllers;
+namespace ProjetoPOO.Controllers;
 
 public class AdministradorController
 {

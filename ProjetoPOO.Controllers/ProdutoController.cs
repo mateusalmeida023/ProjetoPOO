@@ -1,29 +1,41 @@
-using ConsoleApp1.ProjetoPOO.Modelos;
+using ProjetoPOO.Modelos;
+using ProjetoPOO.Repository.Lists;
 
-namespace ConsoleApp1.ProjetoPOO.Controllers;
+namespace ProjetoPOO.Controllers;
 
 public class ProdutoController
 {
+    private readonly ProdutoRepositorio _repo;
+    public ProdutoController()
+    {
+        _repo = new ProdutoRepositorio();
+    }
+
     private Fornecedor SelecionarFornecedor()
     {
-        if (Data.Data.FornecedoresCount == 0)
+        var fornecedorRepo = new FornecedorRepositorio();
+        var fornecedores = fornecedorRepo.BuscarTodos();
+        if (fornecedores.Count == 0)
         {
-            throw new Exception("Não há fornecedores cadastrados. Cadastre um fornecedor antes de incluir produtos.");
+            Console.WriteLine("Nenhum fornecedor cadastrado. Cadastre um fornecedor antes de cadastrar produtos.");
+            Console.WriteLine("\nPressione qualquer tecla para continuar...");
+            Console.ReadKey();
+            return null;
         }
-
-        Console.WriteLine("\nFornecedores disponíveis:");
-        for (int i = 0; i < Data.Data.FornecedoresCount; i++)
+        Console.WriteLine("Selecione o fornecedor:");
+        for (int i = 0; i < fornecedores.Count; i++)
         {
-            Console.WriteLine($"{i + 1}. {Data.Data.Fornecedores[i].Nome} - {Data.Data.Fornecedores[i].Descricao}");
+            var f = fornecedores[i];
+            Console.WriteLine($"{i + 1}. {f.Nome} - {f.Email} - {f.Telefone}");
         }
-
-        Console.Write("\nSelecione o número do fornecedor: ");
-        if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 1 || opcao > Data.Data.FornecedoresCount)
+        Console.Write("\nDigite o número do fornecedor: ");
+        if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 1 || opcao > fornecedores.Count)
         {
-            throw new Exception("Opção inválida! Digite um número da lista.");
+            Console.WriteLine("Opção inválida! Pressione qualquer tecla para continuar...");
+            Console.ReadKey();
+            return null;
         }
-
-        return Data.Data.Fornecedores[opcao - 1];
+        return fornecedores[opcao - 1];
     }
 
     public void IncluirProduto()
@@ -34,6 +46,10 @@ public class ProdutoController
             Console.WriteLine("----INCLUIR PRODUTO----");
             
             Fornecedor fornecedor = SelecionarFornecedor();
+            if (fornecedor == null)
+            {
+                return;
+            }
 
             Console.Write("\nNome do Produto: ");
             string nome = Console.ReadLine();
@@ -61,14 +77,14 @@ public class ProdutoController
                 Quantidade = quantidade,
                 Fornecedor = fornecedor
             };
-            Data.Data.Produtos[Data.Data.ProdutosCount++] = novo;
+            _repo.Incluir(novo);
 
             Console.Clear();
             Console.WriteLine("Produto incluído com sucesso!");
             Console.WriteLine($"Nome: {nome}");
             Console.WriteLine($"Preço: R${preco:F2}");
             Console.WriteLine($"Quantidade: {quantidade}");
-            Console.WriteLine($"Fornecedor: {fornecedor.Nome}");
+            Console.WriteLine($"Fornecedor: {fornecedor?.Nome}");
             Console.WriteLine("\nPressione qualquer tecla para continuar...");
             Console.ReadKey();
         }
@@ -88,7 +104,8 @@ public class ProdutoController
             Console.Clear();
             Console.WriteLine("----EXCLUIR PRODUTO----");
 
-            if (Data.Data.ProdutosCount == 0)
+            var produtos = _repo.BuscarTodos();
+            if (produtos.Count == 0)
             {
                 Console.WriteLine("Não há nenhum produto para remover.");
                 Console.WriteLine("\nPressione qualquer tecla para continuar...");
@@ -96,13 +113,13 @@ public class ProdutoController
                 return;
             }
 
-            for (int i = 0; i < Data.Data.ProdutosCount; i++)
+            for (int i = 0; i < produtos.Count; i++)
             {
-                var produto = Data.Data.Produtos[i];
+                var produto = produtos[i];
                 Console.WriteLine($"{i + 1}.  {produto.Nome} - R${produto.Preco:F2} - Qtd: {produto.Quantidade} - Fornecedor: {produto.Fornecedor?.Nome}");
             }
             Console.Write("\nDigite o número do produto que deseja remover: ");
-            if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 1 || opcao > Data.Data.ProdutosCount)
+            if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 1 || opcao > produtos.Count)
             {
                 Console.Clear();
                 Console.WriteLine("Opção inválida! Digite um número da lista.");
@@ -112,14 +129,7 @@ public class ProdutoController
             }
             
             int index = opcao - 1;
-            
-            for (int i = index; i < Data.Data.ProdutosCount - 1; i++)
-            {
-                Data.Data.Produtos[i] = Data.Data.Produtos[i + 1];
-            }
-
-            Data.Data.ProdutosCount--;
-            Data.Data.Produtos[Data.Data.ProdutosCount] = null;
+            _repo.Excluir(index);
 
             Console.Clear();
             Console.WriteLine("Produto removido com sucesso!");
@@ -142,7 +152,8 @@ public class ProdutoController
             Console.Clear();
             Console.WriteLine("----CONSULTAR PRODUTOS----");
 
-            if (Data.Data.ProdutosCount == 0)
+            var produtos = _repo.BuscarTodos();
+            if (produtos.Count == 0)
             {
                 Console.WriteLine("Não há nenhum produto cadastrado.");
                 Console.WriteLine("\nPressione qualquer tecla para continuar...");
@@ -150,9 +161,9 @@ public class ProdutoController
                 return;
             }
 
-            for (int i = 0; i < Data.Data.ProdutosCount; i++)
+            for (int i = 0; i < produtos.Count; i++)
             {
-                var produto = Data.Data.Produtos[i];
+                var produto = produtos[i];
                 Console.WriteLine($"{i + 1}.  {produto.Nome} - R${produto.Preco:F2} - Qtd: {produto.Quantidade}");
                 Console.WriteLine($"    Fornecedor: {produto.Fornecedor?.Nome}");
                 Console.WriteLine();
@@ -177,7 +188,8 @@ public class ProdutoController
             Console.Clear();
             Console.WriteLine("----ALTERAR PRODUTO----");
             
-            if (Data.Data.ProdutosCount == 0)
+            var produtos = _repo.BuscarTodos();
+            if (produtos.Count == 0)
             {
                 Console.WriteLine("Não há nenhum produto cadastrado para alterar.");
                 Console.WriteLine("\nPressione qualquer tecla para continuar...");
@@ -186,20 +198,20 @@ public class ProdutoController
             }
 
             Console.WriteLine("Produtos cadastrados:");
-            for (int i = 0; i < Data.Data.ProdutosCount; i++)
+            for (int i = 0; i < produtos.Count; i++)
             {
-                var produto = Data.Data.Produtos[i];
+                var produto = produtos[i];
                 Console.WriteLine($"{i + 1}. {produto.Nome} - R${produto.Preco:F2} - Qtd: {produto.Quantidade} - Fornecedor: {produto.Fornecedor?.Nome}");
             }
 
             Console.Write("\nDigite o número do produto que deseja alterar: ");
-            if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 1 || opcao > Data.Data.ProdutosCount)
+            if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 1 || opcao > produtos.Count)
             {
                 throw new Exception("Opção inválida! Digite um número da lista.");
             }
 
             int index = opcao - 1;
-            Produto produtoAtual = Data.Data.Produtos[index];
+            Produto produtoAtual = produtos[index];
 
             Console.Clear();
             Console.WriteLine($"Alterando dados do produto: {produtoAtual.Nome}");
@@ -239,8 +251,10 @@ public class ProdutoController
             
             if (alterarFornecedor == "S")
             {
-                produtoAtual.Fornecedor = SelecionarFornecedor();
+                // produtoAtual.Fornecedor = SelecionarFornecedor();
             }
+
+            _repo.Alterar(index, produtoAtual);
 
             Console.Clear();
             Console.WriteLine("Produto alterado com sucesso!");

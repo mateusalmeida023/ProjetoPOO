@@ -1,14 +1,17 @@
-using ConsoleApp1.ProjetoPOO.Modelos;
+using ProjetoPOO.Modelos;
+using ProjetoPOO.Repository.Lists;
 
-namespace ConsoleApp1.ProjetoPOO.Controllers;
+namespace ProjetoPOO.Controllers;
 
 public class FornecedorController
 {
     private readonly EnderecoController _enderecoController;
+    private readonly FornecedorRepositorio _repo;
 
     public FornecedorController()
     {
         _enderecoController = new EnderecoController();
+        _repo = new FornecedorRepositorio();
     }
 
     public void IncluirFornecedor()
@@ -49,7 +52,7 @@ public class FornecedorController
             Console.Clear();
             Endereco endereco = _enderecoController.CriarEndereco();
             
-            int id = Data.Data.FornecedoresCount + 1;
+            int id = _repo.BuscarTodos().Count + 1;
             var novo = new Fornecedor
             {
                 Nome = nome,
@@ -59,7 +62,7 @@ public class FornecedorController
                 Id = id,
                 Endereco = endereco
             };
-            Data.Data.Fornecedores[Data.Data.FornecedoresCount++] = novo;
+            _repo.Incluir(novo);
             
             Console.Clear();
             Console.WriteLine("Fornecedor incluído com sucesso!");
@@ -84,7 +87,8 @@ public class FornecedorController
         Console.Clear();
         Console.WriteLine("----EXCLUIR FORNECEDOR----");
         
-        if (Data.Data.FornecedoresCount == 0)
+        var fornecedores = _repo.BuscarTodos();
+        if (fornecedores.Count == 0)
         {
             Console.WriteLine("Não há nenhum fornecedor para remover.");
             Console.WriteLine("\nPressione qualquer tecla para continuar...");
@@ -93,13 +97,13 @@ public class FornecedorController
         }
 
         Console.WriteLine("Fornecedores cadastrados:");
-        for (int i = 0; i < Data.Data.FornecedoresCount; i++)
+        for (int i = 0; i < fornecedores.Count; i++)
         {
-            Console.WriteLine($"{i + 1}. {Data.Data.Fornecedores[i].Nome} - {Data.Data.Fornecedores[i].Email}");
+            Console.WriteLine($"{i + 1}. {fornecedores[i].Nome} - {fornecedores[i].Email}");
         }
 
         Console.Write("\nDigite o número do fornecedor que deseja remover: ");
-        if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 1 || opcao > Data.Data.FornecedoresCount)
+        if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 1 || opcao > fornecedores.Count)
         {
             Console.Clear();
             Console.WriteLine("Opção inválida! Digite um número da lista.");
@@ -109,14 +113,7 @@ public class FornecedorController
         }
 
         int index = opcao - 1;
-        
-        for (int i = index; i < Data.Data.FornecedoresCount - 1; i++)
-        {
-            Data.Data.Fornecedores[i] = Data.Data.Fornecedores[i + 1];
-        }
-
-        Data.Data.FornecedoresCount--; 
-        Data.Data.Fornecedores[Data.Data.FornecedoresCount] = null;
+        _repo.Excluir(index);
         
         Console.Clear();
         Console.WriteLine("Fornecedor removido com sucesso!");
@@ -132,11 +129,12 @@ public class FornecedorController
         int id = int.Parse(Console.ReadLine());
         Fornecedor fornecedorEncontrado = null;
 
-        for (int i = 0; i < Data.Data.FornecedoresCount; i++)
+        var fornecedores = _repo.BuscarTodos();
+        for (int i = 0; i < fornecedores.Count; i++)
         {
-            if (Data.Data.Fornecedores[i].Id == id)
+            if (fornecedores[i].Id == id)
             {
-                fornecedorEncontrado = Data.Data.Fornecedores[i];
+                fornecedorEncontrado = fornecedores[i];
             }
         }
 
@@ -160,7 +158,8 @@ public class FornecedorController
             Console.Clear();
             Console.WriteLine("----ALTERAR FORNECEDOR----");
             
-            if (Data.Data.FornecedoresCount == 0)
+            var fornecedores = _repo.BuscarTodos();
+            if (fornecedores.Count == 0)
             {
                 Console.WriteLine("Não há nenhum fornecedor cadastrado para alterar.");
                 Console.WriteLine("\nPressione qualquer tecla para continuar...");
@@ -169,19 +168,19 @@ public class FornecedorController
             }
 
             Console.WriteLine("Fornecedores cadastrados:");
-            for (int i = 0; i < Data.Data.FornecedoresCount; i++)
+            for (int i = 0; i < fornecedores.Count; i++)
             {
-                Console.WriteLine($"{i + 1}. {Data.Data.Fornecedores[i].Nome} - {Data.Data.Fornecedores[i].Email}");
+                Console.WriteLine($"{i + 1}. {fornecedores[i].Nome} - {fornecedores[i].Email}");
             }
 
             Console.Write("\nDigite o número do fornecedor que deseja alterar: ");
-            if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 1 || opcao > Data.Data.FornecedoresCount)
+            if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 1 || opcao > fornecedores.Count)
             {
                 throw new Exception("Opção inválida! Digite um número da lista.");
             }
 
             int index = opcao - 1;
-            Fornecedor fornecedor = Data.Data.Fornecedores[index];
+            Fornecedor fornecedor = fornecedores[index];
 
             Console.Clear();
             Console.WriteLine($"Alterando dados do fornecedor: {fornecedor.Nome}");
@@ -231,6 +230,8 @@ public class FornecedorController
                 Console.Clear();
                 fornecedor.Endereco = _enderecoController.CriarEndereco();
             }
+
+            _repo.Alterar(index, fornecedor);
 
             Console.Clear();
             Console.WriteLine("Fornecedor alterado com sucesso!");

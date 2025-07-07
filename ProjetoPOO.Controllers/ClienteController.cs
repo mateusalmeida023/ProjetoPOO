@@ -1,14 +1,17 @@
-using ConsoleApp1.ProjetoPOO.Modelos;
+using ProjetoPOO.Modelos;
+using ProjetoPOO.Repository.Lists;
 
-namespace ConsoleApp1.ProjetoPOO.Controllers;
+namespace ProjetoPOO.Controllers;
 
 public class ClienteController
 {
     private readonly EnderecoController _enderecoController;
+    private readonly ClienteRepositorio _repo;
 
     public ClienteController()
     {
         _enderecoController = new EnderecoController();
+        _repo = new ClienteRepositorio();
     }
 
     public void IncluirCliente()
@@ -56,7 +59,7 @@ public class ClienteController
                 CPF = cpf,
                 Endereco = endereco
             };
-            Data.Data.Clientes[Data.Data.ClientesCount++] = novo;
+            _repo.Incluir(novo);
 
             Console.Clear();
             Console.WriteLine("Cliente incluído com sucesso!");
@@ -84,7 +87,8 @@ public class ClienteController
             Console.Clear();
             Console.WriteLine("----EXCLUIR CLIENTE----");
 
-            if (Data.Data.ClientesCount == 0)
+            var clientes = _repo.BuscarTodos();
+            if (clientes.Count == 0)
             {
                 Console.WriteLine("Não há nenhum cliente para remover.");
                 Console.WriteLine("\nPressione qualquer tecla para continuar...");
@@ -92,12 +96,12 @@ public class ClienteController
                 return;
             }
 
-            for (int i = 0; i < Data.Data.ClientesCount; i++)
+            for (int i = 0; i < clientes.Count; i++)
             {
-                Console.WriteLine($"{i + 1}.  {Data.Data.Clientes[i].Nome} - CPF: {Data.Data.Clientes[i].CPF}");
+                Console.WriteLine($"{i + 1}.  {clientes[i].Nome} - CPF: {clientes[i].CPF}");
             }
             Console.Write("\nDigite o número do cliente que deseja remover: ");
-            if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 1 || opcao > Data.Data.ClientesCount)
+            if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 1 || opcao > clientes.Count)
             {
                 Console.Clear();
                 Console.WriteLine("Opção inválida! Digite um número da lista.");
@@ -107,14 +111,7 @@ public class ClienteController
             }
             
             int index = opcao - 1;
-            
-            for (int i = index; i < Data.Data.ClientesCount - 1; i++)
-            {
-                Data.Data.Clientes[i] = Data.Data.Clientes[i + 1];
-            }
-
-            Data.Data.ClientesCount--;
-            Data.Data.Clientes[Data.Data.ClientesCount] = null;
+            _repo.Excluir(index);
 
             Console.Clear();
             Console.WriteLine("Cliente removido com sucesso!");
@@ -137,7 +134,8 @@ public class ClienteController
             Console.Clear();
             Console.WriteLine("----CONSULTAR CLIENTES----");
 
-            if (Data.Data.ClientesCount == 0)
+            var clientes = _repo.BuscarTodos();
+            if (clientes.Count == 0)
             {
                 Console.WriteLine("Não há nenhum cliente cadastrado.");
                 Console.WriteLine("\nPressione qualquer tecla para continuar...");
@@ -145,9 +143,9 @@ public class ClienteController
                 return;
             }
 
-            for (int i = 0; i < Data.Data.ClientesCount; i++)
+            for (int i = 0; i < clientes.Count; i++)
             {
-                Console.WriteLine($"{i + 1}.  {Data.Data.Clientes[i].Nome} - CPF: {Data.Data.Clientes[i].CPF}");
+                Console.WriteLine($"{i + 1}.  {clientes[i].Nome} - CPF: {clientes[i].CPF}");
             }
             
             Console.WriteLine("\nPressione qualquer tecla para continuar...");
@@ -169,7 +167,8 @@ public class ClienteController
             Console.Clear();
             Console.WriteLine("----ALTERAR CLIENTE----");
             
-            if (Data.Data.ClientesCount == 0)
+            var clientes = _repo.BuscarTodos();
+            if (clientes.Count == 0)
             {
                 Console.WriteLine("Não há nenhum cliente cadastrado para alterar.");
                 Console.WriteLine("\nPressione qualquer tecla para continuar...");
@@ -178,19 +177,19 @@ public class ClienteController
             }
 
             Console.WriteLine("Clientes cadastrados:");
-            for (int i = 0; i < Data.Data.ClientesCount; i++)
+            for (int i = 0; i < clientes.Count; i++)
             {
-                Console.WriteLine($"{i + 1}. {Data.Data.Clientes[i].Nome} - CPF: {Data.Data.Clientes[i].CPF}");
+                Console.WriteLine($"{i + 1}. {clientes[i].Nome} - CPF: {clientes[i].CPF}");
             }
 
             Console.Write("\nDigite o número do cliente que deseja alterar: ");
-            if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 1 || opcao > Data.Data.ClientesCount)
+            if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 1 || opcao > clientes.Count)
             {
                 throw new Exception("Opção inválida! Digite um número da lista.");
             }
 
             int index = opcao - 1;
-            Cliente clienteAtual = Data.Data.Clientes[index];
+            Cliente clienteAtual = clientes[index];
 
             Console.Clear();
             Console.WriteLine($"Alterando dados do cliente: {clienteAtual.Nome}");
@@ -244,6 +243,8 @@ public class ClienteController
                 Console.Clear();
                 clienteAtual.Endereco = _enderecoController.CriarEndereco();
             }
+
+            _repo.Alterar(index, clienteAtual);
 
             Console.Clear();
             Console.WriteLine("Cliente alterado com sucesso!");

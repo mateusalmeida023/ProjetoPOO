@@ -1,4 +1,4 @@
-namespace ConsoleApp1.ProjetoPOO.Modelos;
+namespace ProjetoPOO.Modelos;
 
 public class Cliente : Usuario
 {

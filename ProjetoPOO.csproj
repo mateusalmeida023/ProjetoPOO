@@ -32,4 +32,8 @@
     <None Remove="ProjetoPOO.Menus\Menus\**" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ProjetoPOO.Repository\Lists\" />
+  </ItemGroup>
+
 </Project>

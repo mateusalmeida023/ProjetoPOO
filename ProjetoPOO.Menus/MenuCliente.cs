@@ -1,6 +1,6 @@
-using ConsoleApp1.ProjetoPOO.Controllers;
+using ProjetoPOO.Controllers;
 
-namespace ConsoleApp1.ProjetoPOO.Menus;
+namespace ProjetoPOO.Menus;
 
 public class MenuCliente
 {
