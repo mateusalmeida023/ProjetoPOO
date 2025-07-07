@@ -9,7 +9,7 @@ public class ClienteRepositorio : RepositorioBase<Cliente>
 
     public override string ToCsv(Cliente c)
     {
-        return $"{c.Nome},{c.Email},{c.Telefone},{c.CPF},{c.Endereco?.Rua},{c.Endereco?.Numero},{c.Endereco?.Bairro},{c.Endereco?.Cidade},{c.Endereco?.Estado},{c.Endereco?.Cep}";
+        return $"{c.Nome},{c.Email},{c.Senha},{c.Telefone},{c.CPF},{c.Endereco?.Rua},{c.Endereco?.Numero},{c.Endereco?.Bairro},{c.Endereco?.Cidade},{c.Endereco?.Estado},{c.Endereco?.Cep}";
     }
 
     public override Cliente FromCsv(string linha)
@@ -19,15 +19,16 @@ public class ClienteRepositorio : RepositorioBase<Cliente>
         {
             Nome = partes[0],
             Email = partes[1],
-            Telefone = partes[2],
-            CPF = partes[3],
+            Senha = partes[2],
+            Telefone = partes[3],
+            CPF = partes[4],
             Endereco = new ProjetoPOO.Modelos.Endereco(
-                partes[4], // Rua
-                partes[5], // Numero
-                partes[6], // Bairro
-                partes[7], // Cidade
-                partes[8], // Estado
-                partes[9]  // Cep
+                partes[5], // Rua
+                partes[6], // Numero
+                partes[7], // Bairro
+                partes[8], // Cidade1
+                partes[9], // Estado
+                partes[10]  // Cep
             )
         };
     }

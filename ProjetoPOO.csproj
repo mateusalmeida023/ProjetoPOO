@@ -16,6 +16,7 @@
     <Compile Remove="ProjetoPOO.Modelos\Class1.cs" />
     <Compile Remove="ProjetoPOO.Modelos\Modelos\**" />
     <Compile Remove="ProjetoPOO.Menus\Menus\**" />
+    <Compile Remove="ProjetoPOO.Controllers\MenuPrincipalController.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,6 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="ProjetoPOO.Controllers\Cliente\" />
     <Folder Include="ProjetoPOO.Repository\Lists\" />
   </ItemGroup>
 

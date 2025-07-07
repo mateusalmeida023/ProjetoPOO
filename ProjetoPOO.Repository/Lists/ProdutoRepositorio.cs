@@ -24,4 +24,9 @@ public class ProdutoRepositorio : RepositorioBase<Produto>
             // Fornecedor deve ser resolvido externamente se necessário
         };
     }
+
+    public List<Produto> BuscarProdutosDisponiveis()
+    {
+        return BuscarTodos().Where(p => p.Quantidade > 0).ToList();
+    }
 } 

@@ -4,7 +4,6 @@ namespace ProjetoPOO.Menus;
 
 public class MenuAdministrador
 {
-    private readonly AdministradorController _controller;
     private readonly MenuCliente _menuCliente;
     private readonly MenuFornecedor _menuFornecedor;
     private readonly MenuProduto _menuProduto;
@@ -12,46 +11,13 @@ public class MenuAdministrador
 
     public MenuAdministrador()
     {
-        _controller = new AdministradorController();
         _menuCliente = new MenuCliente();
         _menuFornecedor = new MenuFornecedor();
         _menuProduto = new MenuProduto();
         _menuTransportadora = new MenuTransportadora();
     }
-
-    public void RealizarLogin()
-    {
-        bool loginSucesso = false;
-
-        while (!loginSucesso)
-        {
-            try
-            {
-                string usuario = _controller.ObterUsuario();
-                string senha = _controller.ObterSenha();
-
-                if (_controller.ValidarLogin(usuario, senha))
-                {
-                    _controller.ExibirMensagemSucesso();
-                    loginSucesso = true;
-                    ExibirMenu();
-                }
-                else
-                {
-                    _controller.ExibirMensagemErro();
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.Clear();
-                Console.WriteLine($"Erro: {ex.Message}");
-                Console.WriteLine("\nPressione qualquer tecla para continuar...");
-                Console.ReadKey();
-            }
-        }
-    }
-
-    private void ExibirMenu()
+    
+    public void ExibirMenu()
     {
         int opcao = -1;
 

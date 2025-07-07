@@ -35,6 +35,13 @@ public class ClienteController
                 throw new EmailInvalidoException();
             }
 
+            Console.Write("Senha do Cliente: ");
+            string senha = Console.ReadLine();
+            if (String.IsNullOrWhiteSpace(senha) || senha.Length < 6)
+            {
+                throw new SenhaInvalidaException();
+            }
+
             Console.Write("Telefone do Cliente: ");
             string telefone = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(telefone) || telefone.Length < 10)
@@ -56,6 +63,7 @@ public class ClienteController
             {
                 Nome = nome,
                 Email = email,
+                Senha = senha,
                 Telefone = telefone,
                 CPF = cpf,
                 Endereco = endereco
@@ -212,6 +220,17 @@ public class ClienteController
                     throw new EmailInvalidoException();
                 }
                 clienteAtual.Email = email;
+            }
+
+            Console.Write($"Senha do Cliente: ");
+            string senha = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(senha))
+            {
+                if (senha.Length < 6)
+                {
+                    throw new SenhaInvalidaException();
+                }
+                clienteAtual.Senha = senha;
             }
 
             Console.Write($"Telefone do Cliente ({clienteAtual.Telefone}): ");
