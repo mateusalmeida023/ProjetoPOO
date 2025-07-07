@@ -1,7 +1,6 @@
-namespace ProjetoPOO.Controllers;
+using ConsoleApp1.ProjetoPOO.Modelos;
 
-using ProjetoPOO.Data;
-using ProjetoPOO.Modelos;
+namespace ConsoleApp1.ProjetoPOO.Controllers;
 
 public class ClienteController
 {
@@ -57,7 +56,7 @@ public class ClienteController
                 CPF = cpf,
                 Endereco = endereco
             };
-            Data.Clientes[Data.ClientesCount++] = novo;
+            Data.Data.Clientes[Data.Data.ClientesCount++] = novo;
 
             Console.Clear();
             Console.WriteLine("Cliente incluído com sucesso!");
@@ -85,7 +84,7 @@ public class ClienteController
             Console.Clear();
             Console.WriteLine("----EXCLUIR CLIENTE----");
 
-            if (Data.ClientesCount == 0)
+            if (Data.Data.ClientesCount == 0)
             {
                 Console.WriteLine("Não há nenhum cliente para remover.");
                 Console.WriteLine("\nPressione qualquer tecla para continuar...");
@@ -93,12 +92,12 @@ public class ClienteController
                 return;
             }
 
-            for (int i = 0; i < Data.ClientesCount; i++)
+            for (int i = 0; i < Data.Data.ClientesCount; i++)
             {
-                Console.WriteLine($"{i + 1}.  {Data.Clientes[i].Nome} - CPF: {Data.Clientes[i].CPF}");
+                Console.WriteLine($"{i + 1}.  {Data.Data.Clientes[i].Nome} - CPF: {Data.Data.Clientes[i].CPF}");
             }
             Console.Write("\nDigite o número do cliente que deseja remover: ");
-            if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 1 || opcao > Data.ClientesCount)
+            if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 1 || opcao > Data.Data.ClientesCount)
             {
                 Console.Clear();
                 Console.WriteLine("Opção inválida! Digite um número da lista.");
@@ -109,13 +108,13 @@ public class ClienteController
             
             int index = opcao - 1;
             
-            for (int i = index; i < Data.ClientesCount - 1; i++)
+            for (int i = index; i < Data.Data.ClientesCount - 1; i++)
             {
-                Data.Clientes[i] = Data.Clientes[i + 1];
+                Data.Data.Clientes[i] = Data.Data.Clientes[i + 1];
             }
 
-            Data.ClientesCount--;
-            Data.Clientes[Data.ClientesCount] = null;
+            Data.Data.ClientesCount--;
+            Data.Data.Clientes[Data.Data.ClientesCount] = null;
 
             Console.Clear();
             Console.WriteLine("Cliente removido com sucesso!");
@@ -138,7 +137,7 @@ public class ClienteController
             Console.Clear();
             Console.WriteLine("----CONSULTAR CLIENTES----");
 
-            if (Data.ClientesCount == 0)
+            if (Data.Data.ClientesCount == 0)
             {
                 Console.WriteLine("Não há nenhum cliente cadastrado.");
                 Console.WriteLine("\nPressione qualquer tecla para continuar...");
@@ -146,9 +145,9 @@ public class ClienteController
                 return;
             }
 
-            for (int i = 0; i < Data.ClientesCount; i++)
+            for (int i = 0; i < Data.Data.ClientesCount; i++)
             {
-                Console.WriteLine($"{i + 1}.  {Data.Clientes[i].Nome} - CPF: {Data.Clientes[i].CPF}");
+                Console.WriteLine($"{i + 1}.  {Data.Data.Clientes[i].Nome} - CPF: {Data.Data.Clientes[i].CPF}");
             }
             
             Console.WriteLine("\nPressione qualquer tecla para continuar...");
@@ -170,7 +169,7 @@ public class ClienteController
             Console.Clear();
             Console.WriteLine("----ALTERAR CLIENTE----");
             
-            if (Data.ClientesCount == 0)
+            if (Data.Data.ClientesCount == 0)
             {
                 Console.WriteLine("Não há nenhum cliente cadastrado para alterar.");
                 Console.WriteLine("\nPressione qualquer tecla para continuar...");
@@ -179,19 +178,19 @@ public class ClienteController
             }
 
             Console.WriteLine("Clientes cadastrados:");
-            for (int i = 0; i < Data.ClientesCount; i++)
+            for (int i = 0; i < Data.Data.ClientesCount; i++)
             {
-                Console.WriteLine($"{i + 1}. {Data.Clientes[i].Nome} - CPF: {Data.Clientes[i].CPF}");
+                Console.WriteLine($"{i + 1}. {Data.Data.Clientes[i].Nome} - CPF: {Data.Data.Clientes[i].CPF}");
             }
 
             Console.Write("\nDigite o número do cliente que deseja alterar: ");
-            if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 1 || opcao > Data.ClientesCount)
+            if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 1 || opcao > Data.Data.ClientesCount)
             {
                 throw new Exception("Opção inválida! Digite um número da lista.");
             }
 
             int index = opcao - 1;
-            Cliente clienteAtual = Data.Clientes[index];
+            Cliente clienteAtual = Data.Data.Clientes[index];
 
             Console.Clear();
             Console.WriteLine($"Alterando dados do cliente: {clienteAtual.Nome}");

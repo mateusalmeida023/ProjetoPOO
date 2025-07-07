@@ -1,8 +1,6 @@
-using System;
+using ConsoleApp1.ProjetoPOO.Controllers;
 
-namespace ProjetoPOO.Menus;
-
-using ProjetoPOO.Controllers;
+namespace ConsoleApp1.ProjetoPOO.Menus;
 
 public class MenuAdministrador
 {

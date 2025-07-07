@@ -1,16 +1,14 @@
-using System;
+using ConsoleApp1.ProjetoPOO.Controllers;
 
-namespace ProjetoPOO.Menus;
+namespace ConsoleApp1.ProjetoPOO.Menus;
 
-using ProjetoPOO.Controllers;
-
-public class MenuCliente
+public class MenuProduto
 {
-    private readonly ClienteController _controller;
+    private readonly ProdutoController _controller;
 
-    public MenuCliente()
+    public MenuProduto()
     {
-        _controller = new ClienteController();
+        _controller = new ProdutoController();
     }
 
     public void ExibirMenu()
@@ -20,11 +18,11 @@ public class MenuCliente
         while (opcao != 99)
         {
             Console.Clear();
-            Console.WriteLine("----CLIENTE----");
-            Console.WriteLine("1 - Incluir cliente");
-            Console.WriteLine("2 - Alterar cliente");
-            Console.WriteLine("3 - Excluir cliente");
-            Console.WriteLine("4 - Consultar clientes");
+            Console.WriteLine("----PRODUTO----");
+            Console.WriteLine("1 - Incluir produto");
+            Console.WriteLine("2 - Alterar produto");
+            Console.WriteLine("3 - Excluir produto");
+            Console.WriteLine("4 - Consultar produtos");
             Console.WriteLine("99 - Voltar");
             Console.Write("Escolha uma opção: ");
 
@@ -38,16 +36,16 @@ public class MenuCliente
                 switch (opcao)
                 {
                     case 1:
-                        _controller.IncluirCliente();
+                        _controller.IncluirProduto();
                         break;
                     case 2:
-                        _controller.AlterarCliente();
+                        _controller.AlterarProduto();
                         break;
                     case 3:
-                        _controller.ExcluirCliente();
+                        _controller.ExcluirProduto();
                         break;
                     case 4:
-                        _controller.ConsultarClientes();
+                        _controller.ConsultarProdutos();
                         break;
                     case 99:
                         return;

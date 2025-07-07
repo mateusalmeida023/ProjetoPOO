@@ -1,6 +1,6 @@
-namespace ProjetoPOO.Data;
+using ConsoleApp1.ProjetoPOO.Modelos;
 
-using ProjetoPOO.Modelos;
+namespace ConsoleApp1.ProjetoPOO.Data;
 
 public static class Data
 {

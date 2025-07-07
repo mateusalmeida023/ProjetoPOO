@@ -1,4 +1,4 @@
-namespace ProjetoPOO.Modelos;
+namespace ConsoleApp1.ProjetoPOO.Modelos;
 
 public class Endereco
 {

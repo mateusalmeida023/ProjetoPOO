@@ -1,6 +1,4 @@
-using System;
-
-namespace ProjetoPOO.Modelos;
+namespace ConsoleApp1.ProjetoPOO.Modelos;
 
 public class Fornecedor : Usuario
 {

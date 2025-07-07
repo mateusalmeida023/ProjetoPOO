@@ -1,7 +1,6 @@
-namespace ProjetoPOO.Controllers;
+using ConsoleApp1.ProjetoPOO.Modelos;
 
-using ProjetoPOO.Data;
-using ProjetoPOO.Modelos;
+namespace ConsoleApp1.ProjetoPOO.Controllers;
 
 public class TransportadoraController
 {
@@ -40,7 +39,7 @@ public class TransportadoraController
                 PrecoPorKm = preco,
                 Endereco = endereco
             };
-            Data.Transportadoras[Data.TransportadorasCount++] = nova;
+            Data.Data.Transportadoras[Data.Data.TransportadorasCount++] = nova;
 
             Console.Clear();
             Console.WriteLine("Transportadora incluída com sucesso!");
@@ -66,7 +65,7 @@ public class TransportadoraController
             Console.Clear();
             Console.WriteLine("----EXCLUIR TRANSPORTADORA----");
 
-            if (Data.TransportadorasCount == 0)
+            if (Data.Data.TransportadorasCount == 0)
             {
                 Console.WriteLine("Não há nenhuma transportadora para remover.");
                 Console.WriteLine("\nPressione qualquer tecla para continuar...");
@@ -74,12 +73,12 @@ public class TransportadoraController
                 return;
             }
 
-            for (int i = 0; i < Data.TransportadorasCount; i++)
+            for (int i = 0; i < Data.Data.TransportadorasCount; i++)
             {
-                Console.WriteLine($"{i + 1}.  {Data.Transportadoras[i].Nome}");
+                Console.WriteLine($"{i + 1}.  {Data.Data.Transportadoras[i].Nome}");
             }
             Console.Write("\nDigite o número da transportadora que deseja remover: ");
-            if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 1 || opcao > Data.TransportadorasCount)
+            if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 1 || opcao > Data.Data.TransportadorasCount)
             {
                 Console.Clear();
                 Console.WriteLine("Opção inválida! Digite um número da lista.");
@@ -90,13 +89,13 @@ public class TransportadoraController
             
             int index = opcao - 1;
             
-            for (int i = index; i < Data.TransportadorasCount - 1; i++)
+            for (int i = index; i < Data.Data.TransportadorasCount - 1; i++)
             {
-                Data.Transportadoras[i] = Data.Transportadoras[i + 1];
+                Data.Data.Transportadoras[i] = Data.Data.Transportadoras[i + 1];
             }
 
-            Data.TransportadorasCount--;
-            Data.Transportadoras[Data.TransportadorasCount] = null;
+            Data.Data.TransportadorasCount--;
+            Data.Data.Transportadoras[Data.Data.TransportadorasCount] = null;
 
             Console.Clear();
             Console.WriteLine("Transportadora removida com sucesso!");
@@ -119,7 +118,7 @@ public class TransportadoraController
             Console.Clear();
             Console.WriteLine("----CONSULTAR TRANSPORTADORAS----");
 
-            if (Data.TransportadorasCount == 0)
+            if (Data.Data.TransportadorasCount == 0)
             {
                 Console.WriteLine("Não há nenhuma transportadora cadastrada.");
                 Console.WriteLine("\nPressione qualquer tecla para continuar...");
@@ -127,9 +126,9 @@ public class TransportadoraController
                 return;
             }
 
-            for (int i = 0; i < Data.TransportadorasCount; i++)
+            for (int i = 0; i < Data.Data.TransportadorasCount; i++)
             {
-                Console.WriteLine($"{i + 1}.  {Data.Transportadoras[i].Nome}");
+                Console.WriteLine($"{i + 1}.  {Data.Data.Transportadoras[i].Nome}");
             }
             
             Console.WriteLine("\nPressione qualquer tecla para continuar...");
@@ -151,7 +150,7 @@ public class TransportadoraController
             Console.Clear();
             Console.WriteLine("----ALTERAR TRANSPORTADORA----");
             
-            if (Data.TransportadorasCount == 0)
+            if (Data.Data.TransportadorasCount == 0)
             {
                 Console.WriteLine("Não há nenhuma transportadora cadastrada para alterar.");
                 Console.WriteLine("\nPressione qualquer tecla para continuar...");
@@ -160,19 +159,19 @@ public class TransportadoraController
             }
 
             Console.WriteLine("Transportadoras cadastradas:");
-            for (int i = 0; i < Data.TransportadorasCount; i++)
+            for (int i = 0; i < Data.Data.TransportadorasCount; i++)
             {
-                Console.WriteLine($"{i + 1}. {Data.Transportadoras[i].Nome} - R${Data.Transportadoras[i].PrecoPorKm:F2} por Km");
+                Console.WriteLine($"{i + 1}. {Data.Data.Transportadoras[i].Nome} - R${Data.Data.Transportadoras[i].PrecoPorKm:F2} por Km");
             }
 
             Console.Write("\nDigite o número da transportadora que deseja alterar: ");
-            if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 1 || opcao > Data.TransportadorasCount)
+            if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 1 || opcao > Data.Data.TransportadorasCount)
             {
                 throw new Exception("Opção inválida! Digite um número da lista.");
             }
 
             int index = opcao - 1;
-            Transportadora transportadoraAtual = Data.Transportadoras[index];
+            Transportadora transportadoraAtual = Data.Data.Transportadoras[index];
 
             Console.Clear();
             Console.WriteLine($"Alterando dados da transportadora: {transportadoraAtual.Nome}");

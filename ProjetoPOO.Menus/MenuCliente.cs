@@ -1,16 +1,14 @@
-using System;
+using ConsoleApp1.ProjetoPOO.Controllers;
 
-namespace ProjetoPOO.Menus;
+namespace ConsoleApp1.ProjetoPOO.Menus;
 
-using ProjetoPOO.Controllers;
-
-public class MenuFornecedor
+public class MenuCliente
 {
-    private readonly FornecedorController _controller;
+    private readonly ClienteController _controller;
 
-    public MenuFornecedor()
+    public MenuCliente()
     {
-        _controller = new FornecedorController();
+        _controller = new ClienteController();
     }
 
     public void ExibirMenu()
@@ -20,11 +18,11 @@ public class MenuFornecedor
         while (opcao != 99)
         {
             Console.Clear();
-            Console.WriteLine("----FORNECEDOR----");
-            Console.WriteLine("1 - Incluir fornecedor");
-            Console.WriteLine("2 - Alterar fornecedor");
-            Console.WriteLine("3 - Excluir fornecedor");
-            Console.WriteLine("4 - Buscar fornecedor");
+            Console.WriteLine("----CLIENTE----");
+            Console.WriteLine("1 - Incluir cliente");
+            Console.WriteLine("2 - Alterar cliente");
+            Console.WriteLine("3 - Excluir cliente");
+            Console.WriteLine("4 - Consultar clientes");
             Console.WriteLine("99 - Voltar");
             Console.Write("Escolha uma opção: ");
 
@@ -38,16 +36,16 @@ public class MenuFornecedor
                 switch (opcao)
                 {
                     case 1:
-                        _controller.IncluirFornecedor();
+                        _controller.IncluirCliente();
                         break;
                     case 2:
-                        _controller.AlterarFornecedor();
+                        _controller.AlterarCliente();
                         break;
                     case 3:
-                        _controller.ExcluirFornecedor();
+                        _controller.ExcluirCliente();
                         break;
                     case 4:
-                        _controller.BuscarFornecedor();
+                        _controller.ConsultarClientes();
                         break;
                     case 99:
                         return;

@@ -1,16 +1,14 @@
-using System;
+using ConsoleApp1.ProjetoPOO.Controllers;
 
-namespace ProjetoPOO.Menus;
+namespace ConsoleApp1.ProjetoPOO.Menus;
 
-using ProjetoPOO.Controllers;
-
-public class MenuProduto
+public class MenuFornecedor
 {
-    private readonly ProdutoController _controller;
+    private readonly FornecedorController _controller;
 
-    public MenuProduto()
+    public MenuFornecedor()
     {
-        _controller = new ProdutoController();
+        _controller = new FornecedorController();
     }
 
     public void ExibirMenu()
@@ -20,11 +18,11 @@ public class MenuProduto
         while (opcao != 99)
         {
             Console.Clear();
-            Console.WriteLine("----PRODUTO----");
-            Console.WriteLine("1 - Incluir produto");
-            Console.WriteLine("2 - Alterar produto");
-            Console.WriteLine("3 - Excluir produto");
-            Console.WriteLine("4 - Consultar produtos");
+            Console.WriteLine("----FORNECEDOR----");
+            Console.WriteLine("1 - Incluir fornecedor");
+            Console.WriteLine("2 - Alterar fornecedor");
+            Console.WriteLine("3 - Excluir fornecedor");
+            Console.WriteLine("4 - Buscar fornecedor");
             Console.WriteLine("99 - Voltar");
             Console.Write("Escolha uma opção: ");
 
@@ -38,16 +36,16 @@ public class MenuProduto
                 switch (opcao)
                 {
                     case 1:
-                        _controller.IncluirProduto();
+                        _controller.IncluirFornecedor();
                         break;
                     case 2:
-                        _controller.AlterarProduto();
+                        _controller.AlterarFornecedor();
                         break;
                     case 3:
-                        _controller.ExcluirProduto();
+                        _controller.ExcluirFornecedor();
                         break;
                     case 4:
-                        _controller.ConsultarProdutos();
+                        _controller.BuscarFornecedor();
                         break;
                     case 99:
                         return;

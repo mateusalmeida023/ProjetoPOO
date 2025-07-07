@@ -1,6 +1,6 @@
-namespace ProjetoPOO.Controllers;
+using ConsoleApp1.ProjetoPOO.Modelos;
 
-using ProjetoPOO.Modelos;
+namespace ConsoleApp1.ProjetoPOO.Controllers;
 
 public class EnderecoController
 {

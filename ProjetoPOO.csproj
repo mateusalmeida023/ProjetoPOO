@@ -8,4 +8,28 @@
     <RootNamespace>ConsoleApp1</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="ProjetoPOO.Modelos\obj\**" />
+    <Compile Remove="ProjetoPOO.Controllers\Program.cs" />
+    <Compile Remove="ProjetoPOO.Menus\obj\**" />
+    <Compile Remove="ProjetoPOO.Menus\Program.cs" />
+    <Compile Remove="ProjetoPOO.Modelos\Class1.cs" />
+    <Compile Remove="ProjetoPOO.Modelos\Modelos\**" />
+    <Compile Remove="ProjetoPOO.Menus\Menus\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="ProjetoPOO.Modelos\obj\**" />
+    <EmbeddedResource Remove="ProjetoPOO.Menus\obj\**" />
+    <EmbeddedResource Remove="ProjetoPOO.Modelos\Modelos\**" />
+    <EmbeddedResource Remove="ProjetoPOO.Menus\Menus\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="ProjetoPOO.Modelos\obj\**" />
+    <None Remove="ProjetoPOO.Menus\obj\**" />
+    <None Remove="ProjetoPOO.Modelos\Modelos\**" />
+    <None Remove="ProjetoPOO.Menus\Menus\**" />
+  </ItemGroup>
+
 </Project>

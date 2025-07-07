@@ -1,5 +1,5 @@
 ﻿using System;
-using ProjetoPOO.Menus;
+using ConsoleApp1.ProjetoPOO.Menus;
 
 namespace ProjetoPOO;
 

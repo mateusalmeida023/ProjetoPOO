@@ -1,7 +1,6 @@
-namespace ProjetoPOO.Controllers;
+using ConsoleApp1.ProjetoPOO.Modelos;
 
-using ProjetoPOO.Data;
-using ProjetoPOO.Modelos;
+namespace ConsoleApp1.ProjetoPOO.Controllers;
 
 public class FornecedorController
 {
@@ -50,7 +49,7 @@ public class FornecedorController
             Console.Clear();
             Endereco endereco = _enderecoController.CriarEndereco();
             
-            int id = Data.FornecedoresCount + 1;
+            int id = Data.Data.FornecedoresCount + 1;
             var novo = new Fornecedor
             {
                 Nome = nome,
@@ -60,7 +59,7 @@ public class FornecedorController
                 Id = id,
                 Endereco = endereco
             };
-            Data.Fornecedores[Data.FornecedoresCount++] = novo;
+            Data.Data.Fornecedores[Data.Data.FornecedoresCount++] = novo;
             
             Console.Clear();
             Console.WriteLine("Fornecedor incluído com sucesso!");
@@ -85,7 +84,7 @@ public class FornecedorController
         Console.Clear();
         Console.WriteLine("----EXCLUIR FORNECEDOR----");
         
-        if (Data.FornecedoresCount == 0)
+        if (Data.Data.FornecedoresCount == 0)
         {
             Console.WriteLine("Não há nenhum fornecedor para remover.");
             Console.WriteLine("\nPressione qualquer tecla para continuar...");
@@ -94,13 +93,13 @@ public class FornecedorController
         }
 
         Console.WriteLine("Fornecedores cadastrados:");
-        for (int i = 0; i < Data.FornecedoresCount; i++)
+        for (int i = 0; i < Data.Data.FornecedoresCount; i++)
         {
-            Console.WriteLine($"{i + 1}. {Data.Fornecedores[i].Nome} - {Data.Fornecedores[i].Email}");
+            Console.WriteLine($"{i + 1}. {Data.Data.Fornecedores[i].Nome} - {Data.Data.Fornecedores[i].Email}");
         }
 
         Console.Write("\nDigite o número do fornecedor que deseja remover: ");
-        if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 1 || opcao > Data.FornecedoresCount)
+        if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 1 || opcao > Data.Data.FornecedoresCount)
         {
             Console.Clear();
             Console.WriteLine("Opção inválida! Digite um número da lista.");
@@ -111,13 +110,13 @@ public class FornecedorController
 
         int index = opcao - 1;
         
-        for (int i = index; i < Data.FornecedoresCount - 1; i++)
+        for (int i = index; i < Data.Data.FornecedoresCount - 1; i++)
         {
-            Data.Fornecedores[i] = Data.Fornecedores[i + 1];
+            Data.Data.Fornecedores[i] = Data.Data.Fornecedores[i + 1];
         }
 
-        Data.FornecedoresCount--; 
-        Data.Fornecedores[Data.FornecedoresCount] = null;
+        Data.Data.FornecedoresCount--; 
+        Data.Data.Fornecedores[Data.Data.FornecedoresCount] = null;
         
         Console.Clear();
         Console.WriteLine("Fornecedor removido com sucesso!");
@@ -133,11 +132,11 @@ public class FornecedorController
         int id = int.Parse(Console.ReadLine());
         Fornecedor fornecedorEncontrado = null;
 
-        for (int i = 0; i < Data.FornecedoresCount; i++)
+        for (int i = 0; i < Data.Data.FornecedoresCount; i++)
         {
-            if (Data.Fornecedores[i].Id == id)
+            if (Data.Data.Fornecedores[i].Id == id)
             {
-                fornecedorEncontrado = Data.Fornecedores[i];
+                fornecedorEncontrado = Data.Data.Fornecedores[i];
             }
         }
 
@@ -161,7 +160,7 @@ public class FornecedorController
             Console.Clear();
             Console.WriteLine("----ALTERAR FORNECEDOR----");
             
-            if (Data.FornecedoresCount == 0)
+            if (Data.Data.FornecedoresCount == 0)
             {
                 Console.WriteLine("Não há nenhum fornecedor cadastrado para alterar.");
                 Console.WriteLine("\nPressione qualquer tecla para continuar...");
@@ -170,19 +169,19 @@ public class FornecedorController
             }
 
             Console.WriteLine("Fornecedores cadastrados:");
-            for (int i = 0; i < Data.FornecedoresCount; i++)
+            for (int i = 0; i < Data.Data.FornecedoresCount; i++)
             {
-                Console.WriteLine($"{i + 1}. {Data.Fornecedores[i].Nome} - {Data.Fornecedores[i].Email}");
+                Console.WriteLine($"{i + 1}. {Data.Data.Fornecedores[i].Nome} - {Data.Data.Fornecedores[i].Email}");
             }
 
             Console.Write("\nDigite o número do fornecedor que deseja alterar: ");
-            if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 1 || opcao > Data.FornecedoresCount)
+            if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 1 || opcao > Data.Data.FornecedoresCount)
             {
                 throw new Exception("Opção inválida! Digite um número da lista.");
             }
 
             int index = opcao - 1;
-            Fornecedor fornecedor = Data.Fornecedores[index];
+            Fornecedor fornecedor = Data.Data.Fornecedores[index];
 
             Console.Clear();
             Console.WriteLine($"Alterando dados do fornecedor: {fornecedor.Nome}");
