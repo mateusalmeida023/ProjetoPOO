@@ -22,7 +22,7 @@ public class MenuPrincipal
             Console.WriteLine("Bem-vindo ao sistema!");
             Console.WriteLine("1 - Registrar");
             Console.WriteLine("2 - Fazer login");
-            Console.WriteLine("0 - Sair");
+            Console.WriteLine("99 - Sair");
             Console.Write("Escolha uma opção: ");
             var opcao = Console.ReadLine();
             if (opcao == "1")
@@ -33,7 +33,7 @@ public class MenuPrincipal
             {
                 FazerLogin();
             }
-            else if (opcao == "0")
+            else if (opcao == "99")
             {
                 break;
             }

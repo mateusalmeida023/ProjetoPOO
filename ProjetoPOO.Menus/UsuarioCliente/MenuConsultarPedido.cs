@@ -20,7 +20,7 @@ public class MenuConsultarPedido
             Console.WriteLine("1 - Consultar por número do pedido");
             Console.WriteLine("2 - Consultar por intervalo de datas");
             Console.WriteLine("3 - Consultar todos pedidos");
-            Console.WriteLine("0 - Voltar");
+            Console.WriteLine("99 - Voltar");
             Console.Write("Escolha uma opção: ");
             var opcao = Console.ReadLine();
             if (opcao == "1")
@@ -35,7 +35,7 @@ public class MenuConsultarPedido
             {
                 ConsultarTodosPedidos(cliente);
             }
-            else if (opcao == "0")
+            else if (opcao == "99")
             {
                 break;
             }
