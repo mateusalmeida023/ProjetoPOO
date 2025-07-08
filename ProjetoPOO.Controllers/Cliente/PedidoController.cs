@@ -265,17 +265,16 @@ public class PedidoController
             Console.ReadKey();
             return;
         }
-        Console.WriteLine($"----TODOS OS PEDIDOS DE {cliente.Nome.ToUpper()}----");
-        Console.WriteLine($"Total de pedidos: {pedidos.Count}");
-        Console.WriteLine();
-        foreach (var pedido in pedidos)
+        for (int i = 0; i < pedidos.Count; i++)
         {
-            Console.WriteLine(GerarDetalhesPedido(pedido));
+            Console.Clear();
+            Console.WriteLine($"----PEDIDO {i + 1} DE {pedidos.Count}----");
+            Console.WriteLine(GerarDetalhesPedido(pedidos[i]));
             Console.WriteLine(new string('-', 50));
             Console.WriteLine();
+            Console.WriteLine("Pressione qualquer tecla para continuar...");
+            Console.ReadKey();
         }
-        Console.WriteLine("Pressione qualquer tecla para continuar...");
-        Console.ReadKey();
     }
 
     public void MenuFazerPedido(Cliente cliente)
@@ -480,6 +479,9 @@ public class PedidoController
             if (AlterarSituacaoPedido(pedidoParaCancelar.Numero, Situacao.CANCELADO))
             {
                 Console.WriteLine("Pedido cancelado com sucesso!");
+                // Recarregar pedidos do cliente após o cancelamento
+                var todosPedidos = _pedidoRepo.BuscarTodos();
+                cliente.Pedidos = todosPedidos.Where(p => p.Cliente?.Email == cliente.Email).ToList();
             }
             else
             {
