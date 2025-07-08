@@ -124,32 +124,35 @@ public class FornecedorController
 
     public void BuscarFornecedor()
     {
-        Console.Clear();
-        Console.WriteLine("----BUSCAR FORNECEDOR----");
-        Console.Write("Digite o ID do fornecedor que deseja buscar: ");
-        int id = int.Parse(Console.ReadLine());
-        Fornecedor fornecedorEncontrado = null;
-
-        var fornecedores = _repo.BuscarTodos();
-        for (int i = 0; i < fornecedores.Count; i++)
+        try
         {
-            if (fornecedores[i].Id == id)
+            Console.Clear();
+            Console.WriteLine("----CONSULTAR FORNECEDORES----");
+
+            var fornecedores = _repo.BuscarTodos();
+            if (fornecedores.Count == 0)
             {
-                fornecedorEncontrado = fornecedores[i];
+                Console.WriteLine("Não há nenhum fornecedor cadastrada.");
+                Console.WriteLine("\nPressione qualquer tecla para continuar...");
+                Console.ReadKey();
+                return;
             }
-        }
 
-        Console.Clear();
-        if (fornecedorEncontrado != null)
-        {
-            Console.WriteLine(fornecedorEncontrado);
+            for (int i = 0; i < fornecedores.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}.  {fornecedores[i].Nome}");
+            }
+            
+            Console.WriteLine("\nPressione qualquer tecla para continuar...");
+            Console.ReadKey();
         }
-        else
+        catch (Exception ex)
         {
-            Console.WriteLine("Fornecedor não encontrado!");
+            Console.Clear();
+            Console.WriteLine($"Erro: {ex.Message}");
+            Console.WriteLine("\nPressione qualquer tecla para continuar...");
+            Console.ReadKey();
         }
-        Console.WriteLine("\nPressione qualquer tecla para continuar...");
-        Console.ReadKey();
     }
 
     public void AlterarFornecedor()
