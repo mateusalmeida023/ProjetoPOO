@@ -9,7 +9,6 @@ public class ProdutoRepositorio : RepositorioBase<Produto>
 
     public override string ToCsv(Produto p)
     {
-        // Serializa Fornecedor apenas pelo Id
         return $"{p.Nome},{p.Preco},{p.Quantidade},{p.Fornecedor?.Id ?? 0}";
     }
 
@@ -21,7 +20,6 @@ public class ProdutoRepositorio : RepositorioBase<Produto>
             Nome = partes[0],
             Preco = double.Parse(partes[1]),
             Quantidade = int.Parse(partes[2]),
-            // Fornecedor deve ser resolvido externamente se necessário
         };
     }
 

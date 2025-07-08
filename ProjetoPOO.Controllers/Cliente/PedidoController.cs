@@ -17,26 +17,24 @@ public class PedidoController
         _transportadoraRepo = new TransportadoraRepositorio();
     }
 
-    // Método para calcular distância aproximada entre dois endereços
+ 
     private double CalcularDistancia(Endereco origem, Endereco destino)
     {
-        // Cálculo simplificado baseado em coordenadas aproximadas
-        // Em um sistema real, seria usado uma API de geocoding
+       
         if (origem?.Cidade == destino?.Cidade)
         {
-            return 10.0; // 10km para mesma cidade
+            return 10.0; 
         }
         else if (origem?.Estado == destino?.Estado)
         {
-            return 100.0; // 100km para mesmo estado
+            return 100.0; 
         }
         else
         {
-            return 500.0; // 500km para estados diferentes
+            return 500.0; 
         }
     }
-
-    // Método para selecionar transportadora
+    
     private Transportadora SelecionarTransportadora(Endereco origem, Endereco destino)
     {
         var transportadoras = _transportadoraRepo.BuscarTodos();
@@ -65,8 +63,7 @@ public class PedidoController
 
         return transportadoras[opcao - 1];
     }
-
-    // Método para calcular frete
+    
     private double CalcularFrete(Transportadora transportadora, Endereco origem, Endereco destino)
     {
         if (transportadora == null) return 0.0;
@@ -81,13 +78,11 @@ public class PedidoController
             return null;
         var itens = new List<PedidoItem>();
         var produtoRepo = new ProjetoPOO.Repository.Lists.ProdutoRepositorio();
-        // Validar e processar cada item do pedido
         foreach (var (produto, qtd) in itensPedido)
         {
             if (qtd <= 0) continue;
             if (qtd > produto.Quantidade) continue;
             itens.Add(new PedidoItem(qtd, produto.Preco * qtd));
-            // Atualizar estoque do produto no repositório
             var todosProdutos = produtoRepo.BuscarTodosProdutos();
             var produtoRepoItem = todosProdutos.FirstOrDefault(p => p.Nome == produto.Nome);
             if (produtoRepoItem != null)
@@ -104,7 +99,7 @@ public class PedidoController
         {
             return null;
         }
-        // Selecionar transportadora e calcular frete
+      
         Console.Clear();
         var transportadora = SelecionarTransportadora(null, cliente.Endereco);
         double frete = CalcularFrete(transportadora, null, cliente.Endereco);
@@ -182,8 +177,7 @@ public class PedidoController
     {
         return _pedidoRepo.BuscarTodos();
     }
-
-    // Métodos de menu para interação direta com o usuário (antes estavam no menu)
+    
     public void MenuConsultaPorNumero(Cliente cliente)
     {
         Console.Clear();
@@ -479,7 +473,6 @@ public class PedidoController
             if (AlterarSituacaoPedido(pedidoParaCancelar.Numero, Situacao.CANCELADO))
             {
                 Console.WriteLine("Pedido cancelado com sucesso!");
-                // Recarregar pedidos do cliente após o cancelamento
                 var todosPedidos = _pedidoRepo.BuscarTodos();
                 cliente.Pedidos = todosPedidos.Where(p => p.Cliente?.Email == cliente.Email).ToList();
             }

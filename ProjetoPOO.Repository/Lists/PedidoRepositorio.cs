@@ -25,13 +25,11 @@ public class PedidoRepositorio : RepositorioBase<Pedido>
             Itens = new List<PedidoItem>()
         };
         
-        // Se há dados de transportadora (partes[4])
         if (partes.Length > 4 && !string.IsNullOrEmpty(partes[4]))
         {
             pedido.Transportadora = new Transportadora { Nome = partes[4] };
         }
         
-        // Se há dados de situação (partes[5])
         if (partes.Length > 5 && !string.IsNullOrEmpty(partes[5]))
         {
             if (Enum.TryParse<Situacao>(partes[5], out var situacao))
@@ -40,12 +38,12 @@ public class PedidoRepositorio : RepositorioBase<Pedido>
             }
             else
             {
-                pedido.Situacao = Situacao.NOVO; // Valor padrão
+                pedido.Situacao = Situacao.NOVO; 
             }
         }
         else
         {
-            pedido.Situacao = Situacao.NOVO; // Valor padrão
+            pedido.Situacao = Situacao.NOVO;
         }
         
         if (partes.Length > 6)
