@@ -63,6 +63,7 @@ public class MenuProduto
                 Console.WriteLine($"Erro: {ex.Message}");
                 Console.WriteLine("\nPressione qualquer tecla para continuar...");
                 Console.ReadKey();
+                Console.Clear();
             }
         }
     }

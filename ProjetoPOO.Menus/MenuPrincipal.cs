@@ -41,6 +41,7 @@ public class MenuPrincipal
             {
                 Console.WriteLine("Opção inválida!");
                 Console.ReadKey();
+                Console.Clear();
             }
         }
     }
@@ -64,13 +65,15 @@ public class MenuPrincipal
         var cliente = clientes.FirstOrDefault(c => c.Email == usuario && c.Senha == senha);
         if (cliente != null)
         {
-            Console.WriteLine($"Bem-vindo, {cliente.Nome}! (Menu do cliente em construção)");
+            Console.Clear();
+            Console.WriteLine($"Bem-vindo, {cliente.Nome}!");
             Console.WriteLine("\nPressione qualquer tecla para continuar...");
             Console.ReadKey();
             var menuCliente = new MenuUsuarioCliente(cliente);
             menuCliente.ExibirMenu();
             return;
         }
+        Console.Clear();
         Console.WriteLine("Login ou senha inválidos! Pressione qualquer tecla para continuar...");
         Console.ReadKey();
     }

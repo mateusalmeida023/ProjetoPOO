@@ -9,6 +9,8 @@ public class EnderecoController
     {   
         try
         {
+            Console.Clear();
+            Console.WriteLine("----CADASTRAR ENDEREÇO----");
             Console.Write("Rua: ");
             string rua = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(rua))

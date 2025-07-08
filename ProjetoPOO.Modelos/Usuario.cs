@@ -2,9 +2,9 @@ namespace ProjetoPOO.Modelos;
 
 public abstract class Usuario
 {
-    public required string Nome { get; set; }
-    public required string Telefone { get; set; }
-    public required string Email { get; set; }
+    public string Nome { get; set; }
+    public string Telefone { get; set; }
+    public string Email { get; set; }
     public int Id { get; set; }
     
 }

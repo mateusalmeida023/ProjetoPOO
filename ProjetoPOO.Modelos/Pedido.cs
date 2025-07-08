@@ -9,6 +9,7 @@ public class Pedido
     public double PrecoFrete { get; set; }
     public List<PedidoItem> Itens { get; set; }
     public Cliente Cliente { get; set; }
+    public Transportadora Transportadora { get; set; }
 
     public Pedido()
     {

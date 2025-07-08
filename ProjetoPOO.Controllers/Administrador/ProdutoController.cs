@@ -23,6 +23,7 @@ public class ProdutoController
             Console.ReadKey();
             return null;
         }
+        Console.Clear();
         Console.WriteLine("Selecione o fornecedor:");
         for (int i = 0; i < fornecedores.Count; i++)
         {

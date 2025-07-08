@@ -29,4 +29,9 @@ public class ProdutoRepositorio : RepositorioBase<Produto>
     {
         return BuscarTodos().Where(p => p.Quantidade > 0).ToList();
     }
+
+    public List<Produto> BuscarTodosProdutos()
+    {
+        return BuscarTodos();
+    }
 } 

@@ -2,8 +2,8 @@ namespace ProjetoPOO.Modelos;
 
 public class Cliente : Usuario
 {
-    public required string Senha { get; set; }
-    public required string CPF { get; set; }
+    public string Senha { get; set; }
+    public string CPF { get; set; }
     public Endereco Endereco { get; set; }
     public List<Pedido> Pedidos { get; set; } = new List<Pedido>();
 
@@ -18,6 +18,7 @@ public class Cliente : Usuario
         Telefone = telefone;
         CPF = cpf;
         Senha = senha;
+        Pedidos = new List<Pedido>();
     }
 
     public override string ToString()

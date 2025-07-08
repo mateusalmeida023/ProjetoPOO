@@ -8,6 +8,7 @@ public class MenuAdministrador
     private readonly MenuFornecedor _menuFornecedor;
     private readonly MenuProduto _menuProduto;
     private readonly MenuTransportadora _menuTransportadora;
+    private readonly MenuPedido _menuPedido;
 
     public MenuAdministrador()
     {
@@ -15,6 +16,7 @@ public class MenuAdministrador
         _menuFornecedor = new MenuFornecedor();
         _menuProduto = new MenuProduto();
         _menuTransportadora = new MenuTransportadora();
+        _menuPedido = new MenuPedido();
     }
     
     public void ExibirMenu()
@@ -29,6 +31,7 @@ public class MenuAdministrador
             Console.WriteLine("2 - Gerenciar Fornecedores");
             Console.WriteLine("3 - Gerenciar Produtos");
             Console.WriteLine("4 - Gerenciar Transportadoras");
+            Console.WriteLine("5 - Gerenciar Pedidos");
             Console.WriteLine("99 - Sair");
             Console.Write("Escolha uma opção: ");
 
@@ -53,6 +56,9 @@ public class MenuAdministrador
                     case 4:
                         _menuTransportadora.ExibirMenu();
                         break;
+                    case 5:
+                        _menuPedido.ExibirMenu();
+                        break;
                     case 99:
                         return;
                     default:
@@ -60,6 +66,7 @@ public class MenuAdministrador
                         Console.WriteLine("Opção inválida!");
                         Console.WriteLine("\nPressione qualquer tecla para continuar...");
                         Console.ReadKey();
+                        Console.Clear();
                         break;
                 }
             }
@@ -69,6 +76,7 @@ public class MenuAdministrador
                 Console.WriteLine($"Erro: {ex.Message}");
                 Console.WriteLine("\nPressione qualquer tecla para continuar...");
                 Console.ReadKey();
+                Console.Clear();
             }
         }
     }

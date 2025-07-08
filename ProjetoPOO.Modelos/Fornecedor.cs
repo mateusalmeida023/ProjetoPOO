@@ -2,7 +2,7 @@ namespace ProjetoPOO.Modelos;
 
 public class Fornecedor : Usuario
 {
-    public required string Descricao { get; set; }
+    public string Descricao { get; set; }
     public Endereco Endereco { get; set; }
     public new int Id { get; set; }
 

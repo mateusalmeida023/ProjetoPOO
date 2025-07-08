@@ -54,6 +54,7 @@ public class MenuFornecedor
                         Console.WriteLine("Opção inválida!");
                         Console.WriteLine("\nPressione qualquer tecla para continuar...");
                         Console.ReadKey();
+                        Console.Clear();
                         break;
                 }
             }
@@ -63,6 +64,7 @@ public class MenuFornecedor
                 Console.WriteLine($"Erro: {ex.Message}");
                 Console.WriteLine("\nPressione qualquer tecla para continuar...");
                 Console.ReadKey();
+                Console.Clear();
             }
         }
     }
