@@ -79,43 +79,35 @@ public class PedidoController
     {
         if (itensPedido == null || itensPedido.Count == 0)
             return null;
-            
         var itens = new List<PedidoItem>();
-        var produtosAtualizados = new List<Produto>();
-        
+        var produtoRepo = new ProjetoPOO.Repository.Lists.ProdutoRepositorio();
         // Validar e processar cada item do pedido
         foreach (var (produto, qtd) in itensPedido)
         {
-            // Verificar se a quantidade é válida
-            if (qtd <= 0)
-            {
-                continue;
-            }
-            
-            // Verificar se há estoque suficiente
-            if (qtd > produto.Quantidade)
-            {
-                continue;
-            }
-            
-            // Criar item do pedido
+            if (qtd <= 0) continue;
+            if (qtd > produto.Quantidade) continue;
             itens.Add(new PedidoItem(qtd, produto.Preco * qtd));
-            
-            // Atualizar estoque do produto
-            produto.Quantidade -= qtd;
-            produtosAtualizados.Add(produto);
+            // Atualizar estoque do produto no repositório
+            var todosProdutos = produtoRepo.BuscarTodosProdutos();
+            var produtoRepoItem = todosProdutos.FirstOrDefault(p => p.Nome == produto.Nome);
+            if (produtoRepoItem != null)
+            {
+                produtoRepoItem.Quantidade -= qtd;
+                int index = todosProdutos.FindIndex(p => p.Nome == produto.Nome);
+                if (index >= 0)
+                {
+                    produtoRepo.Alterar(index, produtoRepoItem);
+                }
+            }
         }
-        
         if (itens.Count == 0)
         {
             return null;
         }
-
         // Selecionar transportadora e calcular frete
         Console.Clear();
         var transportadora = SelecionarTransportadora(null, cliente.Endereco);
         double frete = CalcularFrete(transportadora, null, cliente.Endereco);
-
         var pedido = new Pedido
         {
             Numero = new Random().Next(1000, 9999),
@@ -126,17 +118,8 @@ public class PedidoController
             Cliente = cliente,
             Transportadora = transportadora
         };
-        
-        // Salvar o pedido
         cliente.Pedidos.Add(pedido);
         _pedidoRepo.Incluir(pedido);
-        
-        // Atualizar estoque dos produtos no repositório
-        foreach (var produto in produtosAtualizados)
-        {
-            _produtoRepo.Salvar();
-        }
-        
         return pedido;
     }
 
@@ -198,5 +181,316 @@ public class PedidoController
     public List<Pedido> BuscarTodosPedidos()
     {
         return _pedidoRepo.BuscarTodos();
+    }
+
+    // Métodos de menu para interação direta com o usuário (antes estavam no menu)
+    public void MenuConsultaPorNumero(Cliente cliente)
+    {
+        Console.Clear();
+        var pedidos = ConsultarPorCliente(cliente);
+        if (pedidos == null || pedidos.Count == 0)
+        {
+            Console.WriteLine("Você não possui nenhum pedido.");
+            Console.WriteLine("\nPressione qualquer tecla para continuar...");
+            Console.ReadKey();
+            return;
+        }
+        Console.WriteLine("Seus pedidos:");
+        foreach (var p in pedidos)
+        {
+            Console.WriteLine($"- Pedido Nº {p.Numero} - {p.DataHoraPedido:dd/MM/yyyy HH:mm}");
+        }
+        Console.WriteLine();
+        Console.Write("Digite o número do pedido: ");
+        if (!int.TryParse(Console.ReadLine(), out int numero))
+        {
+            Console.WriteLine("Número inválido!");
+            Console.ReadKey();
+            return;
+        }
+        var pedido = ConsultarPorNumero(cliente, numero);
+        if (pedido == null)
+        {
+            Console.WriteLine("Pedido não encontrado!");
+            Console.ReadKey();
+            return;
+        }
+        Console.Clear();
+        Console.WriteLine(GerarDetalhesPedido(pedido));
+        Console.WriteLine("\nPressione qualquer tecla para continuar...");
+        Console.ReadKey();
+    }
+
+    public void MenuConsultaPorData(Cliente cliente)
+    {
+        Console.Clear();
+        Console.Write("Data inicial (dd/MM/yyyy): ");
+        if (!DateTime.TryParseExact(Console.ReadLine(), "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out DateTime dataIni))
+        {
+            Console.WriteLine("Data inválida!");
+            Console.ReadKey();
+            return;
+        }
+        Console.Write("Data final (dd/MM/yyyy): ");
+        if (!DateTime.TryParseExact(Console.ReadLine(), "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out DateTime dataFim))
+        {
+            Console.WriteLine("Data inválida!");
+            Console.ReadKey();
+            return;
+        }
+        var pedidos = ConsultarPorData(cliente, dataIni, dataFim);
+        if (pedidos.Count == 0)
+        {
+            Console.WriteLine("Nenhum pedido encontrado no período.");
+            Console.ReadKey();
+            return;
+        }
+        foreach (var pedido in pedidos)
+        {
+            Console.Clear();
+            Console.WriteLine(GerarDetalhesPedido(pedido));
+            Console.WriteLine("\nPressione qualquer tecla para continuar...");
+            Console.ReadKey();
+        }
+    }
+
+    public void MenuConsultaTodosPedidos(Cliente cliente)
+    {
+        Console.Clear();
+        var pedidos = ConsultarPorCliente(cliente);
+        if (pedidos == null || pedidos.Count == 0)
+        {
+            Console.WriteLine("Nenhum pedido encontrado.");
+            Console.WriteLine("\nPressione qualquer tecla para continuar...");
+            Console.ReadKey();
+            return;
+        }
+        Console.WriteLine($"----TODOS OS PEDIDOS DE {cliente.Nome.ToUpper()}----");
+        Console.WriteLine($"Total de pedidos: {pedidos.Count}");
+        Console.WriteLine();
+        foreach (var pedido in pedidos)
+        {
+            Console.WriteLine(GerarDetalhesPedido(pedido));
+            Console.WriteLine(new string('-', 50));
+            Console.WriteLine();
+        }
+        Console.WriteLine("Pressione qualquer tecla para continuar...");
+        Console.ReadKey();
+    }
+
+    public void MenuFazerPedido(Cliente cliente)
+    {
+        var produtoRepo = new ProjetoPOO.Repository.Lists.ProdutoRepositorio();
+        Console.Clear();
+        var todosProdutos = produtoRepo.BuscarTodosProdutos();
+        var produtosDisponiveis = produtoRepo.BuscarProdutosDisponiveis();
+        if (todosProdutos.Count == 0)
+        {
+            Console.WriteLine("Não há produtos cadastrados no sistema.");
+            Console.WriteLine("Pressione qualquer tecla para voltar...");
+            Console.ReadKey();
+            return;
+        }
+        if (produtosDisponiveis.Count == 0)
+        {
+            Console.WriteLine("Não há produtos disponíveis para pedido.");
+            Console.WriteLine("Todos os produtos estão com estoque zero.");
+            Console.WriteLine("Pressione qualquer tecla para voltar...");
+            Console.ReadKey();
+            return;
+        }
+        ExibirProdutos(todosProdutos);
+        var itensPedido = new List<(Produto produto, int quantidade)>();
+        double totalPedido = 0;
+        while (true)
+        {
+            Console.WriteLine();
+            Console.WriteLine($"Total atual do pedido: R${totalPedido:F2}");
+            Console.Write("Digite o número do produto para adicionar ao pedido (ou 0 para finalizar): ");
+            if (!int.TryParse(Console.ReadLine(), out int opcao) || opcao < 0 || opcao > todosProdutos.Count)
+            {
+                Console.WriteLine("Opção inválida!");
+                Console.WriteLine("Pressione qualquer tecla para continuar...");
+                Console.ReadKey();
+                Console.Clear();
+                ExibirProdutos(todosProdutos);
+                continue;
+            }
+            if (opcao == 0) break;
+            var produto = todosProdutos[opcao - 1];
+            if (produto.Quantidade <= 0)
+            {
+                Console.WriteLine($"Produto '{produto.Nome}' não está disponível (estoque: {produto.Quantidade})!");
+                Console.WriteLine("Pressione qualquer tecla para continuar...");
+                Console.ReadKey();
+                Console.Clear();
+                ExibirProdutos(todosProdutos);
+                continue;
+            }
+            Console.Write($"Quantidade de '{produto.Nome}' (máximo: {produto.Quantidade}): ");
+            if (!int.TryParse(Console.ReadLine(), out int qtd) || qtd <= 0)
+            {
+                Console.WriteLine("Quantidade inválida! Digite um número maior que zero.");
+                Console.WriteLine("Pressione qualquer tecla para continuar...");
+                Console.ReadKey();
+                Console.Clear();
+                ExibirProdutos(todosProdutos);
+                continue;
+            }
+            if (qtd > produto.Quantidade)
+            {
+                Console.WriteLine($"Quantidade solicitada ({qtd}) excede o estoque disponível ({produto.Quantidade}).");
+                Console.WriteLine($"Quantidade máxima disponível: {produto.Quantidade}");
+                Console.Write("Deseja comprar a quantidade máxima disponível? (s/n): ");
+                var confirmarMaximo = Console.ReadLine()?.ToLower();
+                if (confirmarMaximo == "s" || confirmarMaximo == "sim")
+                {
+                    qtd = produto.Quantidade;
+                }
+                else
+                {
+                    Console.Clear();
+                    ExibirProdutos(todosProdutos);
+                    continue;
+                }
+            }
+            var itemExistente = itensPedido.FirstOrDefault(i => i.produto.Nome == produto.Nome);
+            if (itemExistente.produto != null)
+            {
+                Console.WriteLine($"Produto '{produto.Nome}' já foi adicionado ao pedido.");
+                Console.Write("Deseja alterar a quantidade? (s/n): ");
+                var alterarQuantidade = Console.ReadLine()?.ToLower();
+                if (alterarQuantidade == "s" || alterarQuantidade == "sim")
+                {
+                    itensPedido.Remove(itemExistente);
+                    totalPedido -= itemExistente.produto.Preco * itemExistente.quantidade;
+                }
+                else
+                {
+                    Console.Clear();
+                    ExibirProdutos(todosProdutos);
+                    continue;
+                }
+            }
+            itensPedido.Add((produto, qtd));
+            totalPedido += produto.Preco * qtd;
+            Console.WriteLine($"'{produto.Nome}' adicionado ao pedido: {qtd} unidade(s) - R${produto.Preco * qtd:F2}");
+            Console.WriteLine("Pressione qualquer tecla para continuar...");
+            Console.ReadKey();
+            Console.Clear();
+            ExibirProdutos(todosProdutos);
+        }
+        if (itensPedido.Count == 0)
+        {
+            Console.WriteLine("Nenhum item adicionado ao pedido.");
+            Console.WriteLine("Pressione qualquer tecla para voltar...");
+            Console.ReadKey();
+            return;
+        }
+        Console.WriteLine();
+        Console.WriteLine("=== RESUMO DO PEDIDO ===");
+        foreach (var item in itensPedido)
+        {
+            Console.WriteLine($"{item.produto.Nome}: {item.quantidade}x R${item.produto.Preco:F2} = R${item.produto.Preco * item.quantidade:F2}");
+        }
+        Console.WriteLine($"Total dos itens: R${totalPedido:F2}");
+        Console.WriteLine();
+        Console.Write("Confirmar pedido? (s/n): ");
+        var confirm = Console.ReadLine();
+        if (confirm?.ToLower() != "s")
+        {
+            Console.WriteLine("Pedido cancelado.");
+            Console.ReadKey();
+            return;
+        }
+        var pedido = RealizarPedido(cliente, itensPedido);
+        if (pedido != null)
+        {
+            Console.Clear();
+            Console.WriteLine("Pedido realizado com sucesso!");
+            Console.WriteLine(GerarDetalhesPedido(pedido));
+        }
+        else
+        {
+            Console.WriteLine("Erro ao realizar pedido.");
+        }
+        Console.WriteLine("Pressione qualquer tecla para voltar...");
+        Console.ReadKey();
+    }
+
+    private void ExibirProdutos(List<Produto> produtos)
+    {
+        Console.WriteLine("Produtos disponíveis:");
+        for (int i = 0; i < produtos.Count; i++)
+        {
+            var p = produtos[i];
+            string status = p.Quantidade > 0 ? $"Estoque: {p.Quantidade}" : "INDISPONÍVEL";
+            string disponibilidade = p.Quantidade > 0 ? "" : " (não disponível)";
+            Console.WriteLine($"{i + 1} - {p.Nome} | Preço: R${p.Preco:F2} | {status}{disponibilidade}");
+        }
+    }
+
+    public void MenuCancelarPedidos(Cliente cliente)
+    {
+        Console.Clear();
+        Console.WriteLine("----CANCELAR PEDIDOS----");
+        var pedidos = ConsultarPorCliente(cliente);
+        if (pedidos == null || pedidos.Count == 0)
+        {
+            Console.WriteLine("Você não possui nenhum pedido.");
+            Console.WriteLine("\nPressione qualquer tecla para continuar...");
+            Console.ReadKey();
+            return;
+        }
+        var pedidosCancelaveis = pedidos.Where(p => p.Situacao == Situacao.NOVO || p.Situacao == Situacao.TRANSPORTE).ToList();
+        if (pedidosCancelaveis.Count == 0)
+        {
+            Console.WriteLine("Não há pedidos que possam ser cancelados.");
+            Console.WriteLine("Apenas pedidos com situação NOVO ou TRANSPORTE podem ser cancelados.");
+            Console.WriteLine("\nPressione qualquer tecla para continuar...");
+            Console.ReadKey();
+            return;
+        }
+        Console.WriteLine("Pedidos que podem ser cancelados:");
+        foreach (var pedido in pedidosCancelaveis)
+        {
+            Console.WriteLine($"Nº {pedido.Numero} - {pedido.DataHoraPedido:dd/MM/yyyy HH:mm} - Situação: {pedido.Situacao}");
+        }
+        Console.Write("\nDigite o número do pedido que deseja cancelar: ");
+        if (!int.TryParse(Console.ReadLine(), out int numeroPedido))
+        {
+            Console.WriteLine("Número inválido!");
+            Console.ReadKey();
+            return;
+        }
+        var pedidoParaCancelar = pedidosCancelaveis.FirstOrDefault(p => p.Numero == numeroPedido);
+        if (pedidoParaCancelar == null)
+        {
+            Console.WriteLine("Pedido não encontrado ou não pode ser cancelado!");
+            Console.ReadKey();
+            return;
+        }
+        Console.Clear();
+        Console.WriteLine($"Detalhes do pedido Nº {pedidoParaCancelar.Numero}:");
+        Console.WriteLine(GerarDetalhesPedido(pedidoParaCancelar));
+        Console.Write("\nTem certeza que deseja cancelar este pedido? (s/n): ");
+        var confirmacao = Console.ReadLine()?.ToLower();
+        if (confirmacao == "s" || confirmacao == "sim")
+        {
+            if (AlterarSituacaoPedido(pedidoParaCancelar.Numero, Situacao.CANCELADO))
+            {
+                Console.WriteLine("Pedido cancelado com sucesso!");
+            }
+            else
+            {
+                Console.WriteLine("Erro ao cancelar pedido!");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Cancelamento cancelado.");
+        }
+        Console.WriteLine("\nPressione qualquer tecla para continuar...");
+        Console.ReadKey();
     }
 } 
