@@ -16,7 +16,6 @@ public class PedidoController
     {
         Console.Clear();
         Console.WriteLine("----CONSULTAR TODOS OS PEDIDOS----");
-
         var pedidos = _pedidoRepo.BuscarTodos();
         if (pedidos.Count == 0)
         {
@@ -25,20 +24,21 @@ public class PedidoController
             Console.ReadKey();
             return;
         }
-
-        foreach (var pedido in pedidos)
+        for (int i = 0; i < pedidos.Count; i++)
         {
+            Console.Clear();
+            Console.WriteLine($"----PEDIDO {i + 1} DE {pedidos.Count}----");
+            var pedido = pedidos[i];
             Console.WriteLine($"Pedido Nº: {pedido.Numero}");
             Console.WriteLine($"Cliente: {pedido.Cliente?.Email}");
             Console.WriteLine($"Data: {pedido.DataHoraPedido:dd/MM/yyyy HH:mm}");
             Console.WriteLine($"Situação: {pedido.Situacao}");
             Console.WriteLine($"Transportadora: {pedido.Transportadora?.Nome ?? "N/A"}");
-            Console.WriteLine($"Total: R${pedido.Itens.Sum(i => i.PrecoTotal) + pedido.PrecoFrete:F2}");
+            Console.WriteLine($"Total: R${pedido.Itens.Sum(it => it.PrecoTotal) + pedido.PrecoFrete:F2}");
             Console.WriteLine(new string('-', 50));
+            Console.WriteLine("Pressione qualquer tecla para continuar...");
+            Console.ReadKey();
         }
-
-        Console.WriteLine("\nPressione qualquer tecla para continuar...");
-        Console.ReadKey();
     }
 
     public void AlterarSituacaoPedido()
