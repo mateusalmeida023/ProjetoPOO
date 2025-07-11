@@ -17,6 +17,7 @@
     <Compile Remove="ProjetoPOO.Modelos\Modelos\**" />
     <Compile Remove="ProjetoPOO.Menus\Menus\**" />
     <Compile Remove="ProjetoPOO.Controllers\MenuPrincipalController.cs" />
+    <Compile Remove="ProjetoPOO.Repository\Arrays\ExemploUsoArrays.cs" />
   </ItemGroup>
 
   <ItemGroup>
